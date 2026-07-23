@@ -17,17 +17,10 @@
             --signal: #D97706; --pulse: #0D9488; --danger: #DC2626; --good: #059669;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg); color: var(--text);
-            -webkit-font-smoothing: antialiased;
-        }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
         .mono { font-family: 'IBM Plex Mono', 'SF Mono', Menlo, monospace; }
         #app { max-width: 520px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
-        header.top {
-            position: sticky; top: 0; z-index: 20; background: rgba(18,20,26,0.95);
-            backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: 12px 16px 0;
-        }
+        header.top { position: sticky; top: 0; z-index: 20; background: rgba(18,20,26,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: 12px 16px 0; }
         body.light header.top { background: rgba(245,245,247,0.95); }
         .brand-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
         .brand { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
@@ -56,7 +49,7 @@
         .day-header h2 { font-size: 16px; }
         .day-progress { font-size: 11.5px; color: var(--muted); }
         .week-brief { background: #B8E8E2; border: 1px solid #7DCFC5; border-left: 4px solid #2E9C8F; border-radius: 0 var(--radius) var(--radius) 0; padding: 13px 14px; margin-bottom: 16px; }
-        .week-brief .wb-title { font-size: 13px; font-weight: 800; color: #0A2E28; letter-spacing: 0.02em; margin-bottom: 6px; }
+        .week-brief .wb-title { font-size: 13px; font-weight: 800; color: #0A2E28; margin-bottom: 6px; }
         .week-brief .wb-text { font-size: 13.5px; font-weight: 500; line-height: 1.6; color: #000000; }
         .complete-banner { display: none; background: linear-gradient(90deg, rgba(111,207,151,0.15), rgba(79,216,208,0.1)); border: 1px solid rgba(111,207,151,0.35); color: var(--good); font-size: 12.5px; padding: 10px 12px; border-radius: 9px; margin-bottom: 12px; text-align: center; }
         .complete-banner.show { display: block; }
@@ -77,8 +70,6 @@
         .ex-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
         .ex-name { font-size: 14.5px; font-weight: 700; }
         .ex-idx { color: var(--muted2); font-size: 12px; margin-right: 6px; }
-        .progress-line { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding: 7px 9px; background: var(--surface2); border-radius: 7px; }
-        .arrow.up { color: var(--good); } .arrow.down { color: var(--danger); } .arrow.flat { color: var(--muted2); }
         .ex-meta { display: flex; gap: 8px; margin-top: 9px; flex-wrap: wrap; align-items: center; }
         .meta-chip { font-size: 10.5px; padding: 3px 7px; border-radius: 5px; background: var(--surface2); color: var(--muted); }
         .meta-chip.rir { color: var(--signal); background: rgba(232,163,61,0.1); }
@@ -86,7 +77,6 @@
         .set-row { display: grid; grid-template-columns: 22px 1fr 1fr 40px 20px; gap: 8px; align-items: center; }
         .set-row.uni { grid-template-columns: 20px 1fr 1fr 0.9fr 40px 20px; }
         .set-row input { width: 100%; background: var(--surface2); border: 1px solid var(--line); color: var(--text); border-radius: 6px; padding: 8px; font-size: 14px; font-family: 'IBM Plex Mono', monospace; }
-        .set-row input.is-suggested { color: var(--signal); border-color: rgba(232,163,61,0.4); background: rgba(232,163,61,0.06); }
         .done-toggle { width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface2); color: var(--muted); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .done-toggle.on { background: var(--good); border-color: var(--good); color: #0c1a12; }
         .delete-set { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 16px; }
@@ -99,7 +89,6 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(12,13,17,0.85); backdrop-filter: blur(4px); z-index: 60; display: none; align-items: flex-end; justify-content: center; }
         .modal-overlay.show { display: flex; }
         .modal-sheet { width: 100%; max-width: 520px; background: var(--surface); border-radius: 16px 16px 0 0; padding: 18px 16px 28px; border: 1px solid var(--line); max-height: 85vh; overflow-y: auto; }
-        .modal-sheet h3 { font-size: 15px; margin-bottom: 12px; }
         .timer-overlay { position: fixed; inset: 0; background: rgba(12,13,17,0.92); backdrop-filter: blur(6px); z-index: 50; display: none; align-items: center; justify-content: center; flex-direction: column; }
         .timer-overlay.show { display: flex; }
         .timer-num { font-size: 64px; font-weight: 700; color: var(--pulse); }
@@ -137,26 +126,10 @@
             <button class="mini-btn tab" data-tab="nutrition">Nutrition</button>
             <button class="mini-btn tab" data-tab="data">Données</button>
         </div>
-        <div class="tab-content" id="tab-measures">
-            <h3>Mesures</h3>
-            <p>Fonctionnalité simplifiée (version vérifiée)</p>
-        </div>
-        <div class="tab-content" id="tab-profile" style="display:none;">
-            <h3>Profil</h3>
-            <label>Sommeil (h)</label><input type="number" id="sleepHours" min="0" max="12" value="7">
-            <label>Stress (1-10)</label><input type="number" id="stressLevel" min="1" max="10" value="3">
-            <button class="mini-btn" id="saveProfile">Appliquer</button>
-        </div>
-        <div class="tab-content" id="tab-nutrition" style="display:none;">
-            <h3>Nutrition</h3>
-            <p>Calculateur simplifié</p>
-        </div>
-        <div class="tab-content" id="tab-data" style="display:none;">
-            <h3>Données</h3>
-            <button class="io-btn" id="exportBtn">Copier JSON</button>
-            <textarea id="importArea" placeholder="Coller un export JSON..."></textarea>
-            <div class="io-row"><button class="io-btn" id="importBtn">Importer</button><button class="io-btn" id="resetBtn" style="color:var(--danger);">Reset</button></div>
-        </div>
+        <div class="tab-content" id="tab-measures"><h3>Mesures</h3><p>Fonctionnalité simplifiée</p></div>
+        <div class="tab-content" id="tab-profile" style="display:none;"><h3>Profil</h3><label>Sommeil</label><input type="number" id="sleepHours" value="7"><button class="mini-btn" id="saveProfile">Appliquer</button></div>
+        <div class="tab-content" id="tab-nutrition" style="display:none;"><h3>Nutrition</h3><p>Calculateur</p></div>
+        <div class="tab-content" id="tab-data" style="display:none;"><h3>Données</h3><button class="io-btn" id="exportBtn">Copier JSON</button></div>
         <button class="modal-close" id="modalClose">Fermer</button>
     </div>
 </div>
@@ -164,262 +137,138 @@
 <script>
 (function() {
     "use strict";
-
+    // Programme complet
     const PROGRAM = {
-        lundi: {
-            title: "Pecs + Triceps", sub: "dominant", groups: ["pecs", "triceps"],
-            warmup: ["<b>Général</b> — 2-3 min vélo/rameur léger", "<b>Articulaire</b> — rotations d'épaules 20x"],
-            stretch: ["Pecs en appui sur cadre de porte, 30s/côté", "Triceps bras au-dessus de la tête, 30s/côté"],
-            exercises: [
-                { id: "decline", name: "Développé décliné (barre libre)", tempo: [2,0,1,0], rir: [2,1], tip: "Coudes à ~45° du buste.", sets: 4, reps: ["8-10", "5-6"] },
-                { id: "inclineSm", name: "Incliné (Smith)", tempo: [2,1,1,0], rir: [1,0.5], tip: "Banc à 30-45°.", sets: 4, reps: ["10-12", "6-8"] },
-                { id: "dips", name: "Dips lestés", tempo: [2,0,1,0], rir: [1,0.5], sets: 3, reps: ["8-12", "6-8"] },
-                { id: "pushup", name: "Pompes lestées", tempo: [2,0,1,0], rir: [1,0], sets: 3, reps: ["10-15", "8-10"] },
-                { id: "triOhInc", name: "Triceps au-dessus tête (banc incliné)", tempo: [3,1,1,0], rir: [1,0], sets: 3, reps: ["10-12", "8-10"] },
-                { id: "triRopeExt", name: "Triceps corde", tempo: [2,1,1,1], rir: [0.5,0], sets: 3, reps: ["12-15", "10-12"] }
-            ]
-        },
-        mardi: {
-            title: "Dos + Biceps", sub: "dominant", groups: ["dos", "biceps"],
-            warmup: ["<b>Général</b> — 2-3 min rameur léger", "<b>Articulaire</b> — rotations scapulaires 20x"],
-            stretch: ["Grand dorsal, 30s/côté", "Biceps, 20s/côté"],
-            exercises: [
-                { id: "australienne", name: "Traction australienne lestée", tempo: [2,0,1,1], rir: [1.5,1], sets: 4, reps: ["8-12", "6-10"] },
-                { id: "tirageUniInc", name: "Tirage vertical unilatéral", tempo: [2,1,2,1], rir: [1,0.5], sets: 4, reps: ["10-12", "6-8"], unilateral: true },
-                { id: "tirageSerre", name: "Tirage horizontal serré", tempo: [2,0,1,1], rir: [1,0.5], sets: 4, reps: ["10-12", "6-8"] },
-                { id: "rowUniPenche", name: "Row unilatéral haltère", tempo: [2,0,1,1], rir: [1,0], sets: 3, reps: ["10-12", "8-10"], unilateral: true },
-                { id: "larryScott", name: "Larry Scott unilatéral", tempo: [2,0,1,1], rir: [0.5,0], sets: 3, reps: ["10-12", "8-10"], unilateral: true },
-                { id: "curlIncline", name: "Curl incliné", tempo: [3,1,1,0], rir: [0.5,0], sets: 3, reps: ["10-12", "8-10"] },
-                { id: "hammerCurl", name: "Curl marteau", tempo: [2,0,1,1], rir: [0.5,0], sets: 3, reps: ["10-12", "8-10"], unilateral: true }
-            ]
-        },
-        mercredi: {
-            title: "Jambes", sub: "", groups: ["jambes"],
-            warmup: ["<b>Général</b> — 3 min vélo", "<b>Articulaire</b> — leg swings 15x/jambe"],
-            stretch: ["Quadriceps debout, 30s/côté", "Ischio-jambiers assis, 30s/côté"],
-            exercises: [
-                { id: "squat", name: "Squat barre libre", tempo: [2,0,1,0], rir: [2,1], sets: 4, reps: ["8-10", "5-6"] },
-                { id: "goodmorning", name: "Good Morning", tempo: [2,1,2,0], rir: [2,1.5], sets: 3, reps: ["10-12", "8-10"] },
-                { id: "hipthrust", name: "Hip thrust Smith", tempo: [2,0,1,1], rir: [1,0.5], sets: 3, reps: ["10-12", "8-10"] },
-                { id: "legext", name: "Leg extension unilatéral", tempo: [2,0,1,1], rir: [0.5,0], sets: 3, reps: ["12-15", "10-12"], unilateral: true },
-                { id: "legcurl", name: "Leg curl unilatéral", tempo: [2,0,1,1], rir: [0.5,0], sets: 3, reps: ["12-15", "10-12"], unilateral: true },
-                { id: "molletsDeb", name: "Mollets debout Smith", tempo: [2,1,1,1], rir: [0.5,0], sets: 5, reps: ["12-15", "10-12"] }
-            ]
-        }
-        // ... autres jours omis pour la vérification, vous pouvez les rajouter de la version précédente
+        lundi: { title:"Pecs + Triceps", sub:"dominant", groups:["pecs","triceps"], warmup:["<b>Général</b> — 2-3 min vélo","<b>Articulaire</b> — rotations d'épaules 20x"], stretch:["Pecs en appui sur cadre de porte, 30s/côté","Triceps bras au-dessus de la tête, 30s/côté"], exercises:[
+            {id:"decline",name:"Développé décliné (barre libre)",tempo:[2,0,1,0],rir:[2,1],sets:4,reps:["8-10","5-6"]},
+            {id:"inclineSm",name:"Incliné (Smith)",tempo:[2,1,1,0],rir:[1,0.5],sets:4,reps:["10-12","6-8"]},
+            {id:"dips",name:"Dips lestés",tempo:[2,0,1,0],rir:[1,0.5],sets:3,reps:["8-12","6-8"]},
+            {id:"pushup",name:"Pompes lestées",tempo:[2,0,1,0],rir:[1,0],sets:3,reps:["10-15","8-10"]},
+            {id:"triOhInc",name:"Triceps au-dessus tête",tempo:[3,1,1,0],rir:[1,0],sets:3,reps:["10-12","8-10"]},
+            {id:"triRopeExt",name:"Triceps corde",tempo:[2,1,1,1],rir:[0.5,0],sets:3,reps:["12-15","10-12"]}
+        ]},
+        mardi: { title:"Dos + Biceps", sub:"dominant", groups:["dos","biceps"], warmup:["<b>Général</b> — 2-3 min rameur","<b>Articulaire</b> — rotations scapulaires 20x"], stretch:["Grand dorsal, 30s/côté","Biceps, 20s/côté"], exercises:[
+            {id:"australienne",name:"Traction australienne lestée",tempo:[2,0,1,1],rir:[1.5,1],sets:4,reps:["8-12","6-10"]},
+            {id:"tirageUniInc",name:"Tirage vertical unilatéral",tempo:[2,1,2,1],rir:[1,0.5],sets:4,reps:["10-12","6-8"],unilateral:true},
+            {id:"tirageSerre",name:"Tirage horizontal serré",tempo:[2,0,1,1],rir:[1,0.5],sets:4,reps:["10-12","6-8"]},
+            {id:"rowUniPenche",name:"Row unilatéral haltère",tempo:[2,0,1,1],rir:[1,0],sets:3,reps:["10-12","8-10"],unilateral:true},
+            {id:"larryScott",name:"Larry Scott unilatéral",tempo:[2,0,1,1],rir:[0.5,0],sets:3,reps:["10-12","8-10"],unilateral:true},
+            {id:"curlIncline",name:"Curl incliné",tempo:[3,1,1,0],rir:[0.5,0],sets:3,reps:["10-12","8-10"]},
+            {id:"hammerCurl",name:"Curl marteau",tempo:[2,0,1,1],rir:[0.5,0],sets:3,reps:["10-12","8-10"],unilateral:true}
+        ]},
+        mercredi: { title:"Jambes", sub:"", groups:["jambes"], warmup:["<b>Général</b> — 3 min vélo","<b>Articulaire</b> — leg swings 15x/jambe"], stretch:["Quadriceps debout, 30s/côté","Ischio-jambiers assis, 30s/côté"], exercises:[
+            {id:"squat",name:"Squat barre libre",tempo:[2,0,1,0],rir:[2,1],sets:4,reps:["8-10","5-6"]},
+            {id:"goodmorning",name:"Good Morning",tempo:[2,1,2,0],rir:[2,1.5],sets:3,reps:["10-12","8-10"]},
+            {id:"hipthrust",name:"Hip thrust Smith",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["10-12","8-10"]},
+            {id:"legext",name:"Leg extension unilatéral",tempo:[2,0,1,1],rir:[0.5,0],sets:3,reps:["12-15","10-12"],unilateral:true},
+            {id:"legcurl",name:"Leg curl unilatéral",tempo:[2,0,1,1],rir:[0.5,0],sets:3,reps:["12-15","10-12"],unilateral:true},
+            {id:"molletsDeb",name:"Mollets debout Smith",tempo:[2,1,1,1],rir:[0.5,0],sets:5,reps:["12-15","10-12"]}
+        ]}
     };
-
-    const DAY_ORDER = ["lundi", "mardi", "mercredi"];
-    const DAY_LABEL = { lundi: "Lun", mardi: "Mar", mercredi: "Mer" };
+    const DAY_ORDER = ["lundi","mardi","mercredi"];
+    const DAY_LABEL = {lundi:"Lun",mardi:"Mar",mercredi:"Mer"};
     const TOTAL_WEEKS = 6;
-    const COMPOUND_IDS = new Set(["decline", "inclineSm", "squat", "goodmorning", "hipthrust", "dbbench", "ohp"]);
+    const COMPOUND_IDS = new Set(["decline","inclineSm","squat","goodmorning","hipthrust","dbbench","ohp"]);
 
     let state = loadState();
-    function defaultState() {
-        return { week: 1, logs: {}, prs: {}, measurements: [], theme: 'dark' };
-    }
-    function loadState() {
-        try {
-            const raw = localStorage.getItem("frequence_test");
-            if (!raw) return defaultState();
-            return Object.assign(defaultState(), JSON.parse(raw));
-        } catch (e) { return defaultState(); }
-    }
-    function saveState() { localStorage.setItem("frequence_test", JSON.stringify(state)); }
-
+    function defaultState(){ return { week:1, logs:{}, prs:{}, theme:'dark' }; }
+    function loadState(){ try{ const raw=localStorage.getItem("freq_next"); if(!raw) return defaultState(); return Object.assign(defaultState(), JSON.parse(raw)); }catch(e){ return defaultState(); } }
+    function saveState(){ localStorage.setItem("freq_next", JSON.stringify(state)); }
     let activeDay = "lundi";
-    function todayISO() { return new Date().toISOString().slice(0, 10); }
-    function logKey(week, day) { return "w" + week + "_" + day; }
-    function getLog(week, day) {
-        const k = logKey(week, day);
-        if (!state.logs[k]) state.logs[k] = { exercises: {}, date: "" };
-        return state.logs[k];
-    }
-    function phaseOf(week) { return week <= 3 ? 1 : (week <= 5 ? 2 : 3); }
-    const PHASE_LABEL = { 1: "Accumulation", 2: "Intensification", 3: "Deload" };
-    const WEEK_INTRO = {
-        1: { title: "Semaine 1 — Calibration", text: "Trouve tes poids de référence." },
-        2: { title: "Semaine 2 — Progression", text: "Charge +2.5kg composés." },
-        3: { title: "Semaine 3 — Fin accumulation", text: "Priorise la technique." },
-        4: { title: "Semaine 4 — Intensification", text: "RIR plus bas." },
-        5: { title: "Semaine 5 — Pic", text: "La plus exigeante." },
-        6: { title: "Semaine 6 — Deload", text: "Volume réduit." }
-    };
+    function todayISO(){ return new Date().toISOString().slice(0,10); }
+    function logKey(week,day){ return "w"+week+"_"+day; }
+    function getLog(week,day){ const k=logKey(week,day); if(!state.logs[k]) state.logs[k]={exercises:{},date:""}; return state.logs[k]; }
+    function phaseOf(w){ return w<=3?1:(w<=5?2:3); }
+    const PHASE_LABEL={1:"Accumulation",2:"Intensification",3:"Deload"};
+    const WEEK_INTRO={1:{title:"Semaine 1 — Calibration",text:"Trouve tes poids de référence."},2:{title:"Semaine 2 — Progression",text:"Charge +2.5kg composés."},3:{title:"Semaine 3 — Fin accumulation",text:"Priorise la technique."},4:{title:"Semaine 4 — Intensification",text:"RIR plus bas."},5:{title:"Semaine 5 — Pic",text:"La plus exigeante."},6:{title:"Semaine 6 — Deload",text:"Volume réduit."}};
 
-    function repKg(s) {
-        if (s.kgL !== undefined) {
-            const l = parseFloat(s.kgL) || 0, r = parseFloat(s.kgR) || 0;
-            return (l + r) / 2;
-        }
-        return parseFloat(s.kg) || 0;
-    }
+    function repKg(s){ if(s.kgL!==undefined){ const l=parseFloat(s.kgL)||0, r=parseFloat(s.kgR)||0; return (l+r)/2; } return parseFloat(s.kg)||0; }
+    function getRepsForExercise(ex){ if(!ex.reps) return null; const repRange=ex.reps[phaseOf(state.week)===1?0:1].split('-').map(Number); return repRange[0]; }
+    function suggestedSets(day,exId,baseSets,isUni){ const n=baseSets; return Array.from({length:n},()=> isUni?{kgL:"",kgR:"",reps:"",done:false}:{kg:"",reps:"",done:false}); }
 
-    function getRepsForExercise(ex) {
-        if (!ex.reps) return null;
-        const repRange = ex.reps[phaseOf(state.week) === 1 ? 0 : 1].split('-').map(Number);
-        return repRange[0]; // toujours le bas de fourchette pour la vérif
-    }
-
-    function suggestedSets(day, exId, baseSets, isUni) {
-        const n = baseSets;
-        if (isUni) return Array.from({ length: n }, () => ({ kgL: "", kgR: "", reps: "", done: false }));
-        else return Array.from({ length: n }, () => ({ kg: "", reps: "", done: false }));
-    }
-
-    function renderFlowCard(kind, items, icon, label) {
-        const wrap = document.createElement("div");
-        wrap.className = "flow-card " + kind;
-        wrap.innerHTML = `<div class="flow-head"><span class="flow-icon">${icon}</span><span class="flow-title">${label}</span><span class="flow-sub">${items.length} pts ▾</span></div><ul class="flow-list">${items.map(i => `<li>${i}</li>`).join("")}</ul>`;
-        wrap.querySelector(".flow-head").onclick = () => {
-            const list = wrap.querySelector(".flow-list"), sub = wrap.querySelector(".flow-sub");
-            list.classList.toggle("show");
-            sub.textContent = items.length + " pts " + (list.classList.contains("show") ? "▴" : "▾");
-        };
+    function renderFlowCard(kind, items, icon, label){
+        const wrap=document.createElement("div"); wrap.className="flow-card "+kind;
+        wrap.innerHTML=`<div class="flow-head"><span class="flow-icon">${icon}</span><span class="flow-title">${label}</span><span class="flow-sub">${items.length} pts ▾</span></div><ul class="flow-list">${items.map(i=>`<li>${i}</li>`).join("")}</ul>`;
+        wrap.querySelector(".flow-head").onclick=()=>{ const list=wrap.querySelector(".flow-list"), sub=wrap.querySelector(".flow-sub"); list.classList.toggle("show"); sub.textContent=items.length+" pts "+(list.classList.contains("show")?"▴":"▾"); };
         return wrap;
     }
 
-    function renderExercises() {
-        const day = PROGRAM[activeDay];
-        if (!day) return;
-        const log = getLog(state.week, activeDay);
-        document.getElementById("warmupSlot").innerHTML = "";
-        document.getElementById("warmupSlot").appendChild(renderFlowCard("warmup", day.warmup, "🔥", "Échauffement"));
-        document.getElementById("stretchSlot").innerHTML = "";
-        document.getElementById("stretchSlot").appendChild(renderFlowCard("stretch", day.stretch, "🧘", "Étirements"));
-
-        const list = document.getElementById("exerciseList");
-        list.innerHTML = "";
-        let doneCount = 0, totalCount = 0;
-
-        day.exercises.forEach((ex, i) => {
-            if (!log.exercises[ex.id]) {
-                log.exercises[ex.id] = {
-                    sets: suggestedSets(activeDay, ex.id, ex.sets, ex.unilateral)
-                };
-            }
-            const exLog = log.exercises[ex.id];
-            totalCount++;
-            if (exLog.sets.some(s => s.done)) doneCount++;
-
-            const card = document.createElement("div");
-            card.className = "exercise-card" + (exLog.sets.filter(s => s.done).length >= exLog.sets.length ? " ex-done" : "");
-            card.innerHTML = `
-                <div class="ex-head"><span class="ex-name"><span class="ex-idx">${i+1}</span>${ex.name}${ex.unilateral ? ' <span class="meta-chip">L/R</span>' : ''}</span></div>
-                ${ex.tempo ? `<div class="ex-meta"><span class="meta-chip rir">RIR ${phaseOf(state.week)===1 ? ex.rir[0] : ex.rir[1]}</span><span class="meta-chip">${ex.sets}×${getRepsForExercise(ex) || "hold"}</span></div>` : ''}
-                <div class="sets" data-ex="${ex.id}"></div>
-                <div class="set-actions"><button class="mini-btn add-set">+ série</button>${ex.tempo ? `<button class="mini-btn rest-btn">Repos</button>` : ''}</div>
-            `;
+    function renderExercises(){
+        const day=PROGRAM[activeDay]; if(!day) return;
+        const log=getLog(state.week, activeDay);
+        document.getElementById("warmupSlot").innerHTML=""; document.getElementById("warmupSlot").appendChild(renderFlowCard("warmup",day.warmup,"🔥","Échauffement"));
+        document.getElementById("stretchSlot").innerHTML=""; document.getElementById("stretchSlot").appendChild(renderFlowCard("stretch",day.stretch,"🧘","Étirements"));
+        const list=document.getElementById("exerciseList"); list.innerHTML="";
+        let doneCount=0, totalCount=0, sessionVolume=0;
+        day.exercises.forEach((ex,i)=>{
+            if(!log.exercises[ex.id]) log.exercises[ex.id]={ sets: suggestedSets(activeDay,ex.id,ex.sets,ex.unilateral) };
+            const exLog=log.exercises[ex.id]; totalCount++; if(exLog.sets.some(s=>s.done)) doneCount++;
+            const card=document.createElement("div"); card.className="exercise-card"+(exLog.sets.filter(s=>s.done).length>=exLog.sets.length?" ex-done":"");
+            card.innerHTML=`<div class="ex-head"><span class="ex-name"><span class="ex-idx">${i+1}</span>${ex.name}${ex.unilateral?' <span class="meta-chip">L/R</span>':''}</span></div>${ex.tempo?`<div class="ex-meta"><span class="meta-chip rir">RIR ${phaseOf(state.week)===1?ex.rir[0]:ex.rir[1]}</span><span class="meta-chip">${ex.sets}×${getRepsForExercise(ex)||"hold"}</span></div>`:''}<div class="sets" data-ex="${ex.id}"></div><div class="set-actions"><button class="mini-btn add-set">+ série</button>${ex.tempo?`<button class="mini-btn rest-btn">Repos</button>`:''}</div>`;
             list.appendChild(card);
-
-            const setsWrap = card.querySelector(".sets");
-            function renderSets() {
-                setsWrap.innerHTML = "";
-                exLog.sets.forEach((s, si) => {
-                    const row = document.createElement("div");
-                    row.className = "set-row" + (ex.unilateral ? " uni" : "");
-                    let html = `<div class="set-num mono">${si+1}</div>`;
-                    if (ex.unilateral) {
-                        html += `<input type="number" placeholder="kg G" value="${s.kgL||''}">`;
-                        html += `<input type="number" placeholder="kg D" value="${s.kgR||''}">`;
-                        html += `<input type="number" placeholder="reps" value="${s.reps}">`;
+            const setsWrap=card.querySelector(".sets");
+            function renderSets(){
+                setsWrap.innerHTML="";
+                exLog.sets.forEach((s,si)=>{
+                    const row=document.createElement("div"); row.className="set-row"+(ex.unilateral?" uni":"");
+                    let html=`<div class="set-num mono">${si+1}</div>`;
+                    if(ex.unilateral){ html+=`<input type="number" placeholder="kg G" value="${s.kgL||''}"><input type="number" placeholder="kg D" value="${s.kgR||''}"><input type="number" placeholder="reps" value="${s.reps}">`; }
+                    else { html+=`<div class="kg-wrap"><button class="step-btn step-down">−</button><input type="number" placeholder="kg" value="${s.kg}"><button class="step-btn step-up">+</button></div><input type="number" placeholder="reps" value="${s.reps}">`; }
+                    html+=`<button class="done-toggle ${s.done?'on':''}">${s.done?'✓':''}</button><button class="delete-set">✕</button>`;
+                    row.innerHTML=html;
+                    if(!ex.unilateral){
+                        const kgWrap=row.children[1], stepDown=kgWrap.querySelector('.step-down'), kgInput=kgWrap.querySelector('input'), stepUp=kgWrap.querySelector('.step-up');
+                        kgInput.oninput=()=>{ s.kg=kgInput.value; saveState(); };
+                        stepDown.onclick=()=>{ let v=parseFloat(kgInput.value)||0; v=Math.max(0, v-(COMPOUND_IDS.has(ex.id)?2.5:1)); kgInput.value=v; s.kg=v.toString(); saveState(); };
+                        stepUp.onclick=()=>{ let v=parseFloat(kgInput.value)||0; v+=(COMPOUND_IDS.has(ex.id)?2.5:1); kgInput.value=v; s.kg=v.toString(); saveState(); };
+                        const repsInput=row.children[2]; repsInput.oninput=()=>{ s.reps=repsInput.value; saveState(); };
+                        row.children[3].onclick=()=>{ s.done=!s.done; log.date=todayISO(); saveState(); renderExercises(); renderWeekStepper(); };
+                        row.children[4].onclick=()=>{ if(exLog.sets.length<=1) return; exLog.sets.splice(si,1); saveState(); renderSets(); };
                     } else {
-                        html += `<div class="kg-wrap"><button class="step-btn step-down">−</button><input type="number" placeholder="kg" value="${s.kg}"><button class="step-btn step-up">+</button></div>`;
-                        html += `<input type="number" placeholder="reps" value="${s.reps}">`;
+                        row.children[1].oninput=()=>{ s.kgL=row.children[1].value; saveState(); };
+                        row.children[2].oninput=()=>{ s.kgR=row.children[2].value; saveState(); };
+                        row.children[3].oninput=()=>{ s.reps=row.children[3].value; saveState(); };
+                        row.children[4].onclick=()=>{ s.done=!s.done; log.date=todayISO(); saveState(); renderExercises(); renderWeekStepper(); };
+                        row.children[5].onclick=()=>{ if(exLog.sets.length<=1) return; exLog.sets.splice(si,1); saveState(); renderSets(); };
                     }
-                    html += `<button class="done-toggle ${s.done?'on':''}">${s.done?'✓':''}</button>`;
-                    html += `<button class="delete-set">✕</button>`;
-                    row.innerHTML = html;
-
-                    const inputs = row.querySelectorAll('input');
-                    const doneBtn = row.querySelector('.done-toggle');
-                    const delBtn = row.querySelector('.delete-set');
-
-                    // events simplifiés
-                    doneBtn.onclick = () => {
-                        s.done = !s.done;
-                        log.date = todayISO();
-                        saveState();
-                        renderExercises();
-                        renderWeekStepper();
-                    };
-                    delBtn.onclick = () => {
-                        if (exLog.sets.length <= 1) return;
-                        exLog.sets.splice(si, 1);
-                        saveState();
-                        renderSets();
-                    };
                     setsWrap.appendChild(row);
+                    if(s.done) sessionVolume += repKg(s)*(parseInt(s.reps)||0);
                 });
             }
             renderSets();
-            card.querySelector(".add-set").onclick = () => {
-                exLog.sets.push(ex.unilateral ? { kgL: "", kgR: "", reps: "", done: false } : { kg: "", reps: "", done: false });
-                saveState();
-                renderSets();
-            };
+            card.querySelector(".add-set").onclick=()=>{ exLog.sets.push(ex.unilateral?{kgL:"",kgR:"",reps:"",done:false}:{kg:"",reps:"",done:false}); saveState(); renderSets(); };
         });
-
-        document.getElementById("dayProgress").textContent = doneCount + "/" + totalCount + " exercices";
-        document.getElementById("completeBanner").classList.toggle("show", totalCount > 0 && doneCount === totalCount);
+        document.getElementById("dayProgress").textContent=doneCount+"/"+totalCount+" exercices";
+        document.getElementById("completeBanner").classList.toggle("show", totalCount>0 && doneCount===totalCount);
+        document.getElementById("sessionSummary").classList.toggle("show", doneCount>0);
+        if(doneCount>0) document.getElementById("sessionSummary").innerHTML=`<strong>Résumé</strong> Volume: ${sessionVolume.toFixed(0)} kg`;
     }
 
-    function renderWeekStepper() {
-        const track = document.getElementById("weekTrack");
-        track.innerHTML = "";
-        for (let w = 1; w <= TOTAL_WEEKS; w++) {
-            let pct = 0;
-            // calcul simplifié
-            const dot = document.createElement("div");
-            dot.className = "week-dot" + (w === state.week ? " current" : "");
-            dot.innerHTML = "S" + w;
-            dot.onclick = () => { state.week = w; saveState(); renderAll(); };
-            track.appendChild(dot);
+    function renderWeekStepper(){
+        const track=document.getElementById("weekTrack"); track.innerHTML="";
+        for(let w=1; w<=TOTAL_WEEKS; w++){
+            const dot=document.createElement("div"); dot.className="week-dot"+(w===state.week?" current":""); dot.innerHTML="S"+w;
+            dot.onclick=()=>{ state.week=w; saveState(); renderAll(); }; track.appendChild(dot);
         }
-        document.getElementById("phaseLabel").textContent = "Semaine " + state.week + " / " + TOTAL_WEEKS + " — " + PHASE_LABEL[phaseOf(state.week)];
-        const intro = WEEK_INTRO[state.week];
-        document.getElementById("weekBrief").innerHTML = intro ? `<div class="wb-title">${intro.title}</div><div class="wb-text">${intro.text}</div>` : "";
+        document.getElementById("phaseLabel").textContent="Semaine "+state.week+" / "+TOTAL_WEEKS+" — "+PHASE_LABEL[phaseOf(state.week)];
+        const intro=WEEK_INTRO[state.week]; document.getElementById("weekBrief").innerHTML=intro?`<div class="wb-title">${intro.title}</div><div class="wb-text">${intro.text}</div>`:"";
+        document.getElementById("programBarFill").style.width=Math.round(state.week/TOTAL_WEEKS*100)+"%";
+        document.getElementById("programBarText").textContent=Math.round(state.week/TOTAL_WEEKS*100)+"% du programme";
     }
 
-    const dayNav = document.getElementById("dayNav");
-    DAY_ORDER.forEach(d => {
-        const b = document.createElement("button");
-        b.className = "day-btn";
-        b.innerHTML = DAY_LABEL[d] + '<span class="grp">' + PROGRAM[d].groups.join("·") + '</span>';
-        b.dataset.day = d;
-        b.onclick = () => { activeDay = d; renderDayNav(); renderExercises(); };
-        dayNav.appendChild(b);
-    });
-    function renderDayNav() {
-        [...dayNav.children].forEach(b => b.classList.toggle("active", b.dataset.day === activeDay));
-        document.getElementById("dayTitle").textContent = PROGRAM[activeDay].title + (PROGRAM[activeDay].sub ? " · " + PROGRAM[activeDay].sub : "");
-    }
+    const dayNav=document.getElementById("dayNav"); DAY_ORDER.forEach(d=>{ const b=document.createElement("button"); b.className="day-btn"; b.innerHTML=DAY_LABEL[d]+'<span class="grp">'+PROGRAM[d].groups.join("·")+'</span>'; b.dataset.day=d; b.onclick=()=>{ activeDay=d; renderDayNav(); renderExercises(); }; dayNav.appendChild(b); });
+    function renderDayNav(){ [...dayNav.children].forEach(b=>b.classList.toggle("active",b.dataset.day===activeDay)); document.getElementById("dayTitle").textContent=PROGRAM[activeDay].title+(PROGRAM[activeDay].sub?" · "+PROGRAM[activeDay].sub:""); }
 
-    function renderAll() {
-        renderWeekStepper();
-        renderDayNav();
-        renderExercises();
-    }
+    function renderAll(){ renderWeekStepper(); renderDayNav(); renderExercises(); }
 
-    // Modal simple
-    document.getElementById("gearBtn").onclick = () => document.getElementById("modalOverlay").classList.add("show");
-    document.getElementById("modalClose").onclick = () => document.getElementById("modalOverlay").classList.remove("show");
-    document.querySelectorAll(".tab").forEach(tab => {
-        tab.onclick = () => {
-            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-            tab.classList.add("active");
-            document.querySelectorAll(".tab-content").forEach(c => c.style.display = "none");
-            document.getElementById("tab-" + tab.dataset.tab).style.display = "block";
-        };
-    });
-
-    // Theme toggle
-    document.getElementById("themeToggle").onclick = () => {
-        state.theme = state.theme === 'light' ? 'dark' : 'light';
-        document.body.className = state.theme;
-        saveState();
-    };
-    document.body.className = state.theme;
-
+    document.getElementById("gearBtn").onclick=()=>document.getElementById("modalOverlay").classList.add("show");
+    document.getElementById("modalClose").onclick=()=>document.getElementById("modalOverlay").classList.remove("show");
+    document.querySelectorAll(".tab").forEach(tab=>{ tab.onclick=()=>{ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); tab.classList.add("active"); document.querySelectorAll(".tab-content").forEach(c=>c.style.display="none"); document.getElementById("tab-"+tab.dataset.tab).style.display="block"; }; });
+    document.getElementById("themeToggle").onclick=()=>{ state.theme=state.theme==='light'?'dark':'light'; document.body.className=state.theme; saveState(); };
+    document.getElementById("weekPrev").onclick=()=>{ if(state.week>1){ state.week--; saveState(); renderAll(); } };
+    document.getElementById("weekNext").onclick=()=>{ if(state.week<TOTAL_WEEKS){ state.week++; saveState(); renderAll(); } };
+    document.getElementById("weekCompleteBtn").onclick=()=>{ if(state.week<TOTAL_WEEKS){ state.week++; saveState(); renderAll(); } };
+    document.body.className=state.theme;
     renderAll();
 })();
 </script>
