@@ -155,7 +155,7 @@
             <div class="field-row"><div class="field"><label>Sous-scap. (mm)</label><input type="number" step="0.1" id="skSubscap"></div><div class="field"><label>Supra-iliaque (mm)</label><input type="number" step="0.1" id="skSuprailiac"></div></div>
             <div class="field-row"><div class="field"><label>Âge</label><input type="number" id="mAge"></div><div class="field"><button class="mini-btn" id="mAdd">Ajouter</button></div></div>
             <div id="mHistory" class="mono" style="max-height:160px; overflow-y:auto;"></div>
-            <canvas id="measChart" width="300" height="150" style="width:100%; height:auto;"></canvas>
+            <canvas id="measChart" width="300" height="150" style="width:100%; height:auto; display:none;"></canvas>
         </div>
         <!-- Onglet Profil -->
         <div class="tab-content" id="tab-profile" style="display:none;">
@@ -197,16 +197,17 @@
 
 <script>
 (function(){"use strict";
-// Programme complet (identique à la version précédente, je le garde entier)
-const PROGRAM={lundi:{title:"Pecs + Triceps",sub:"dominant",groups:["pecs","triceps"],warmup:["<b>Général</b> — 2-3 min vélo/rameur léger ou 30 jumping jacks","<b>Articulaire</b> — rotations d'épaules 20x avant/arrière, cercles de poignets 15x","<b>Activation</b> — écartés légers au poids du corps 15 reps + pompes à vide 2×10","<b>Potentiation</b> — barre à vide sur le banc décliné 1×10, puis 1 série à 50% de la charge de travail"],stretch:["Pecs en appui sur cadre de porte, 30s/côté","Triceps bras au-dessus de la tête, 30s/côté","Croisé de l'épaule avant, 20s/côté","Respiration diaphragmatique, 3-4 cycles"],exercises:[{id:"decline",name:"Développé décliné (barre libre)",tempo:[2,0,1,0],rir:[2,1],tip:"Coudes à ~45° du buste, omoplates serrées. Descends jusqu'au contact léger, ne rebondis pas sur la poitrine.",sets:4,reps:["8-10","5-6"]},{id:"inclineSm",name:"Incliné (Smith)",tempo:[2,1,1,0],rir:[1,0.5],tip:"Banc à 30-45°, pas plus — au-delà les épaules prennent le relais du haut du pec.",sets:4,reps:["10-12","6-8"]},{id:"dips",name:"Dips lestés",tempo:[2,0,1,0],rir:[1,0.5],tip:"Buste penché en avant pour cibler les pecs, coudes qui s'écartent légèrement. Descends jusqu'à un étirement franc.",sets:3,reps:["8-12","6-8"]},{id:"pushup",name:"Pompes lestées",tempo:[2,0,1,0],rir:[1,0],tip:"Corps aligné tête-talons, pas de creux lombaire. Amplitude complète plutôt que vitesse d'exécution.",sets:3,reps:["10-15","8-10"]},{id:"triOhInc",name:"Triceps au-dessus tête (banc incliné, barre spéciale)",tempo:[3,1,1,0],rir:[1,0],tip:"Coudes fixes proches de la tête tout le mouvement. Le banc incliné maximise l'étirement du chef long en bas.",sets:3,reps:["10-12","8-10"]},{id:"triRopeExt",name:"Triceps corde (rotation externe)",tempo:[2,1,1,1],rir:[0.5,0],tip:"Coudes collés au corps, écarte les mains en fin de mouvement pour une contraction maximale du chef latéral.",sets:3,reps:["12-15","10-12"]}]},mardi:{title:"Dos + Biceps",sub:"dominant",groups:["dos","biceps"],warmup:["<b>Général</b> — 2-3 min rameur léger ou corde à sauter douce","<b>Articulaire</b> — rotations scapulaires 20x, cat-cow 10 reps lentes","<b>Activation</b> — tirage vertical à la poulie à vide 1×15, row léger à vide 1×12","<b>Potentiation</b> — 1 série à 50-60% de la charge de travail sur le premier exercice"],stretch:["Grand dorsal, bras tendu latéral en appui, 30s/côté, respiration lente","Biceps, bras tendu derrière le dos, 20s/côté","Torsion douce du buste assise, 20s/côté","Respiration diaphragmatique, 3-4 cycles"],exercises:[{id:"australienne",name:"Traction australienne lestée",tempo:[2,0,1,1],rir:[1.5,1],tip:"Corps gainé et rigide comme une planche, tire la poitrine vers la barre sans casser les hanches.",sets:4,reps:["8-12","6-10"]},{id:"tirageUniInc",name:"Tirage vertical unilatéral (banc incliné)",tempo:[2,1,2,1],rir:[1,0.5],tip:"Le coude mène le mouvement vers la hanche, pas la main. Étirement complet en haut avant de retirer.",sets:4,reps:["10-12","6-8"],unilateral:true},{id:"tirageSerre",name:"Tirage horizontal prise serrée",tempo:[2,0,1,1],rir:[1,0.5],tip:"Buste stable, coudes qui reculent en serrant les omoplates en fin de mouvement.",sets:4,reps:["10-12","6-8"]},{id:"rowUniPenche",name:"Row unilatéral haltère (buste penché, prise neutre)",tempo:[2,0,1,1],rir:[1,0],tip:"Coude proche du corps pour cibler le lat, dos plat.",sets:3,reps:["10-12","8-10"],unilateral:true},{id:"larryScott",name:"Larry Scott unilatéral (haltère, banc incliné)",tempo:[2,0,1,1],rir:[0.5,0],tip:"Buste calé contre le banc, bras en appui devant — élimine la triche. Cible le chef court du biceps.",sets:3,reps:["10-12","8-10"],unilateral:true},{id:"curlIncline",name:"Curl incliné",tempo:[3,1,1,0],rir:[0.5,0],tip:"Bras derrière le corps sur le banc incliné pour maximiser l'étirement du biceps en bas.",sets:3,reps:["10-12","8-10"]},{id:"hammerCurl",name:"Curl marteau",tempo:[2,0,1,1],rir:[0.5,0],tip:"Prise neutre tout le mouvement, coudes fixes — cible le brachial et le brachio-radial.",sets:3,reps:["10-12","8-10"],unilateral:true}]},mercredi:{title:"Jambes",sub:"",groups:["jambes"],warmup:["<b>Général</b> — 3 min vélo ou marche rapide, élever la température des grands groupes musculaires","<b>Articulaire</b> — leg swings avant/arrière et latéraux 15x/jambe, cercles de cheville 10x/côté","<b>Activation</b> — squats au poids du corps 2×15, pont fessier 1×15","<b>Potentiation</b> — 1 série de squat à 50% de la charge de travail"],stretch:["Quadriceps debout, 30s/côté, bassin gainé","Ischio-jambiers assis, 30s/côté, dos droit","Mollets contre un mur, 30s/côté","Fessiers (figure 4 au sol), 20s/côté","Respiration diaphragmatique, 4-5 cycles"],exercises:[{id:"squat",name:"Squat (barre libre)",tempo:[2,0,1,0],rir:[2,1],tip:"Descends jusqu'à ce que les hanches passent sous les genoux, genoux dans l'axe des pieds. La profondeur prime sur la charge.",sets:4,reps:["8-10","5-6"]},{id:"goodmorning",name:"Good Morning (barre libre)",tempo:[2,1,2,0],rir:[2,1.5],tip:"La hanche recule en premier, dos neutre gainé tout le mouvement, genoux légèrement fléchis et fixes.",sets:3,reps:["10-12","8-10"]},{id:"hipthrust",name:"Hip thrust (Smith)",tempo:[2,0,1,1],rir:[1,0.5],tip:"Menton rentré, pousse par les talons, verrouille en extension complète avec une pause d'1s en haut.",sets:3,reps:["10-12","8-10"]},{id:"legext",name:"Leg extension (poulie basse, unilatéral)",tempo:[2,0,1,1],rir:[0.5,0],tip:"Légère rotation externe de la pointe de pied pour le vaste interne, pause 1s en extension complète.",sets:3,reps:["12-15","10-12"],unilateral:true},{id:"legcurl",name:"Leg curl (poulie, unilatéral)",tempo:[2,0,1,1],rir:[0.5,0],tip:"Ne cambre pas le bas du dos pour tricher l'amplitude — bassin neutre, pause en contraction max.",sets:3,reps:["12-15","10-12"],unilateral:true},{id:"molletsDeb",name:"Mollets debout (Smith)",tempo:[2,1,1,1],rir:[0.5,0],tip:"Amplitude complète : étirement franc en bas, contraction pic en haut.",sets:5,reps:["12-15","10-12"]}]},jeudi:{title:"Pecs + Triceps",sub:"rappel léger",groups:["pecs","triceps"],warmup:["<b>Général</b> — 1-2 min mobilité légère","<b>Articulaire</b> — rotations d'épaules 15x","<b>Activation</b> — pompes légères 2×8, écartés légers 1×12","<b>Potentiation</b> — pas nécessaire ici, l'intensité de la séance reste sous-maximale"],stretch:["Pecs cadre de porte, 20s/côté","Triceps au-dessus de la tête, 20s/côté","Respiration diaphragmatique, 2-3 cycles"],exercises:[{id:"dbbench",name:"Développé haltères",tempo:[2,0,1,0],rir:[2,1.5],tip:"Amplitude plus profonde qu'à la barre.",sets:3,reps:["10-12","8-10"]},{id:"flyUni",name:"Écarté unilatéral (poulie haute→basse)",tempo:[2,1,1,1],rir:[1,0.5],tip:"Léger angle du coude fixe.",sets:3,reps:["12-15","10-12"],unilateral:true},{id:"triUniExt",name:"Extension triceps unilatérale (poulie)",tempo:[2,0,1,1],rir:[1,0.5],tip:"Coude fixe collé au corps.",sets:3,reps:["12-15","10-12"],unilateral:true},{id:"triOhDb",name:"Extension triceps unilatérale haltère (au-dessus de la tête)",tempo:[3,1,1,0],rir:[1,0.5],tip:"Coude fixe près de la tête, descends jusqu'à un étirement franc.",sets:3,reps:["12-15","10-12"],unilateral:true},{id:"pumpFinisher",name:"Finisher pump",tempo:[1,0,1,1],rir:[0,0],tip:"Charge légère, stress métabolique élevé.",sets:2,reps:["20-25","20-25"]}]},vendredi:{title:"Dos + Épaules",sub:"rappel dos",groups:["dos","epaules"],warmup:["<b>Général</b> — 2 min rameur léger ou vélo","<b>Articulaire</b> — rotations d'épaules 20x, rotation externe légère à l'élastique 2×12","<b>Activation</b> — tirage léger à vide 1×12, OHP à vide 1×10","<b>Potentiation</b> — 1 série à 50% de la charge sur OHP"],stretch:["Épaule croisée devant la poitrine, 20s/côté","Dos en position enfant, 30s","Trapèze, inclinaison de tête, 20s/côté","Respiration diaphragmatique, 3-4 cycles"],exercises:[{id:"rowUniBanc",name:"Row unilatéral haltère (buste posé, banc incliné)",tempo:[2,0,1,1],rir:[1,0.5],tip:"Version stricte : le buste posé élimine toute triche lombaire.",sets:3,reps:["10-12","8-10"],unilateral:true},{id:"tirageLarge",name:"Tirage horizontal large",tempo:[2,0,1,1],rir:[1,0.5],tip:"Prise plus large déplace l'emphase vers le haut du dos/trapèzes.",sets:3,reps:["10-12","8-10"]},{id:"ohp",name:"OHP",tempo:[2,0,1,0],rir:[2,1],tip:"Trajectoire verticale, barre qui part juste devant le menton.",sets:4,reps:["8-10","5-8"]},{id:"lateralesDb",name:"Latérales haltères",tempo:[2,0,1,0.5],rir:[0.5,0],tip:"Léger angle du coude, le coude mène le mouvement.",sets:4,reps:["12-15","10-12"]},{id:"reardeltfly",name:"Écarté arrière câble",tempo:[2,0,1,1],rir:[1,0.5],tip:"Bras quasi tendus, coude légèrement fléchi fixe.",sets:3,reps:["12-15","10-12"],unilateral:true},{id:"facepullUni",name:"Face pull unilatéral",tempo:[2,0,1,1],rir:[1,0.5],tip:"Le coude monte haut vers l'oreille, tire vers le visage.",sets:3,reps:["12-15","10-12"],unilateral:true},{id:"tirageMenton",name:"Tirage menton (Smith)",tempo:[2,0,1,1],rir:[1,0.5],tip:"Prise un peu plus large que les épaules.",sets:3,reps:["10-12","8-10"]}]},samedi:{title:"Trapèzes + Mollets + Core",sub:"",groups:["trapezes","mollets","core"],warmup:["<b>Général</b> — 2 min marche ou vélo léger","<b>Articulaire</b> — rotations nuque et épaules douces 15x, mobilité cheville 10x/côté","<b>Activation</b> — dead bug léger 1×10/côté"],stretch:["Trapèzes, inclinaison tête, 20s/côté","Mollets contre un mur, 30s/côté","Lombaires en position enfant, 30s","Torsion douce allongée, 20s/côté","Respiration diaphragmatique, 3-4 cycles"],exercises:[{id:"shrugs",name:"Shrugs",tempo:[2,0,1,1],rir:[0.5,0],tip:"Monte les épaules droit vers le haut, pas de rotation.",sets:3,reps:["12-15","10-12"]},{id:"yraise",name:"Y-raise / rowing face haute",tempo:[2,0,1,1],rir:[1,0.5],tip:"Bras en Y, pouces vers le haut.",sets:3,reps:["12-15","10-12"]},{id:"molletsAss",name:"Mollets assis",tempo:[2,1,1,1],rir:[0.5,0],tip:"Genou fléchi cible le soléaire.",sets:4,reps:["15-20","12-15"]},{id:"crunchCable",name:"Crunch câble",tempo:[2,0,1,1],rir:[1,0.5],tip:"Flexion vient de la cage thoracique.",sets:3,reps:["12-15","10-12"]},{id:"pallof",name:"Pallof press unilatéral",tempo:[2,1,1,1],rir:[1,0.5],tip:"Résiste à la rotation.",sets:3,reps:["10-12","8-10"],unilateral:true},{id:"planche",name:"Planche",tempo:null,sets:3,reps:null},{id:"sideplank",name:"Side plank",tempo:null,sets:3,reps:null},{id:"legraise",name:"Relevé de jambes",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["12-15","10-12"]}]}};
+// ========== PROGRAMME ==========
+const PROGRAM={lundi:{title:"Pecs + Triceps",sub:"dominant",groups:["pecs","triceps"],warmup:["<b>Général</b> — 2-3 min vélo/rameur","<b>Articulaire</b> — rotations d'épaules 20x"],stretch:["Pecs cadre de porte 30s","Triceps au-dessus tête 30s"],exercises:[{id:"decline",name:"Développé décliné",tempo:[2,0,1,0],rir:[2,1],sets:4,reps:["8-10","5-6"]},{id:"inclineSm",name:"Incliné Smith",tempo:[2,1,1,0],rir:[1,0.5],sets:4,reps:["10-12","6-8"]},{id:"dips",name:"Dips lestés",tempo:[2,0,1,0],rir:[1,0.5],sets:3,reps:["8-12","6-8"]},{id:"pushup",name:"Pompes lestées",tempo:[2,0,1,0],rir:[1,0],sets:3,reps:["10-15","8-10"]},{id:"triOhInc",name:"Triceps au-dessus tête",tempo:[3,1,1,0],rir:[1,0],sets:3,reps:["10-12","8-10"]},{id:"triRopeExt",name:"Triceps corde",tempo:[2,1,1,1],rir:[0.5,0],sets:3,reps:["12-15","10-12"]}]},mardi:{title:"Dos + Biceps",sub:"dominant",groups:["dos","biceps"],warmup:["<b>Général</b> — 2-3 min rameur","<b>Articulaire</b> — rotations scapulaires 20x"],stretch:["Grand dorsal 30s","Biceps 20s"],exercises:[{id:"australienne",name:"Traction australienne",tempo:[2,0,1,1],rir:[1.5,1],sets:4,reps:["8-12","6-10"]},{id:"tirageUniInc",name:"Tirage vertical unilatéral",tempo:[2,1,2,1],rir:[1,0.5],sets:4,reps:["10-12","6-8"],unilateral:true},{id:"tirageSerre",name:"Tirage horizontal serré",tempo:[2,0,1,1],rir:[1,0.5],sets:4,reps:["10-12","6-8"]},{id:"rowUniPenche",name:"Row unilatéral haltère",tempo:[2,0,1,1],rir:[1,0],sets:3,reps:["10-12","8-10"],unilateral:true},{id:"larryScott",name:"Larry Scott unilatéral",tempo:[2,0,1,1],rir:[0.5,0],sets:3,reps:["10-12","8-10"],unilateral:true},{id:"curlIncline",name:"Curl incliné",tempo:[3,1,1,0],rir:[0.5,0],sets:3,reps:["10-12","8-10"]},{id:"hammerCurl",name:"Curl marteau",tempo:[2,0,1,1],rir:[0.5,0],sets:3,reps:["10-12","8-10"],unilateral:true}]},mercredi:{title:"Jambes",sub:"",groups:["jambes"],warmup:["<b>Général</b> — 3 min vélo","<b>Articulaire</b> — leg swings"],stretch:["Quadriceps 30s","Ischio-jambiers 30s"],exercises:[{id:"squat",name:"Squat barre libre",tempo:[2,0,1,0],rir:[2,1],sets:4,reps:["8-10","5-6"]},{id:"goodmorning",name:"Good Morning",tempo:[2,1,2,0],rir:[2,1.5],sets:3,reps:["10-12","8-10"]},{id:"hipthrust",name:"Hip thrust Smith",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["10-12","8-10"]},{id:"legext",name:"Leg extension unilatéral",tempo:[2,0,1,1],rir:[0.5,0],sets:3,reps:["12-15","10-12"],unilateral:true},{id:"legcurl",name:"Leg curl unilatéral",tempo:[2,0,1,1],rir:[0.5,0],sets:3,reps:["12-15","10-12"],unilateral:true},{id:"molletsDeb",name:"Mollets debout Smith",tempo:[2,1,1,1],rir:[0.5,0],sets:5,reps:["12-15","10-12"]}]},jeudi:{title:"Pecs + Triceps",sub:"rappel léger",groups:["pecs","triceps"],warmup:["<b>Général</b> — 1-2 min mobilité"],stretch:["Pecs 20s","Triceps 20s"],exercises:[{id:"dbbench",name:"Développé haltères",tempo:[2,0,1,0],rir:[2,1.5],sets:3,reps:["10-12","8-10"]},{id:"flyUni",name:"Écarté unilatéral poulie",tempo:[2,1,1,1],rir:[1,0.5],sets:3,reps:["12-15","10-12"],unilateral:true},{id:"triUniExt",name:"Extension triceps unilatérale",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["12-15","10-12"],unilateral:true},{id:"triOhDb",name:"Extension triceps haltère",tempo:[3,1,1,0],rir:[1,0.5],sets:3,reps:["12-15","10-12"],unilateral:true},{id:"pumpFinisher",name:"Finisher pump",tempo:[1,0,1,1],rir:[0,0],sets:2,reps:["20-25","20-25"]}]},vendredi:{title:"Dos + Épaules",sub:"rappel dos",groups:["dos","epaules"],warmup:["<b>Général</b> — 2 min rameur"],stretch:["Épaule croisée 20s","Dos enfant 30s"],exercises:[{id:"rowUniBanc",name:"Row unilatéral buste posé",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["10-12","8-10"],unilateral:true},{id:"tirageLarge",name:"Tirage horizontal large",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["10-12","8-10"]},{id:"ohp",name:"OHP",tempo:[2,0,1,0],rir:[2,1],sets:4,reps:["8-10","5-8"]},{id:"lateralesDb",name:"Latérales haltères",tempo:[2,0,1,0.5],rir:[0.5,0],sets:4,reps:["12-15","10-12"]},{id:"reardeltfly",name:"Écarté arrière câble",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["12-15","10-12"],unilateral:true},{id:"facepullUni",name:"Face pull unilatéral",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["12-15","10-12"],unilateral:true},{id:"tirageMenton",name:"Tirage menton Smith",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["10-12","8-10"]}]},samedi:{title:"Trapèzes + Mollets + Core",sub:"",groups:["trapezes","mollets","core"],warmup:["<b>Général</b> — 2 min marche"],stretch:["Trapèzes 20s","Mollets 30s"],exercises:[{id:"shrugs",name:"Shrugs",tempo:[2,0,1,1],rir:[0.5,0],sets:3,reps:["12-15","10-12"]},{id:"yraise",name:"Y-raise",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["12-15","10-12"]},{id:"molletsAss",name:"Mollets assis",tempo:[2,1,1,1],rir:[0.5,0],sets:4,reps:["15-20","12-15"]},{id:"crunchCable",name:"Crunch câble",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["12-15","10-12"]},{id:"pallof",name:"Pallof press",tempo:[2,1,1,1],rir:[1,0.5],sets:3,reps:["10-12","8-10"],unilateral:true},{id:"planche",name:"Planche",tempo:null,sets:3,reps:null},{id:"sideplank",name:"Side plank",tempo:null,sets:3,reps:null},{id:"legraise",name:"Relevé de jambes",tempo:[2,0,1,1],rir:[1,0.5],sets:3,reps:["12-15","10-12"]}]}};
 const DAY_ORDER=["lundi","mardi","mercredi","jeudi","vendredi","samedi"];
 const DAY_LABEL={lundi:"Lun",mardi:"Mar",mercredi:"Mer",jeudi:"Jeu",vendredi:"Ven",samedi:"Sam"};
 const TOTAL_WEEKS=6;
 const REST_BY_TYPE={compound:150,isolation:75};
 const COMPOUND_IDS=new Set(["decline","inclineSm","squat","goodmorning","hipthrust","dbbench","ohp","tirageUniInc","australienne","tirageSerre","rowUniPenche","rowUniBanc","tirageLarge","dips"]);
 
+// ========== STATE ==========
+const STORAGE_KEY="freq_final_v3";
 let state;
-const STORAGE_KEY="freq_final";
 function defaultState(){return{week:1,logs:{},prs:{},measurements:[],theme:'dark',profile:{sleepHours:7,stressLevel:3,priorityGroup:null}};}
 function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return defaultState();const saved=JSON.parse(raw);return Object.assign(defaultState(),saved,{profile:Object.assign(defaultState().profile,saved.profile||{})});}catch(e){return defaultState();}}
 function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
@@ -216,7 +217,7 @@ function logKey(w,d){return "w"+w+"_"+d;}
 function getLog(w,d){const k=logKey(w,d);if(!state.logs[k])state.logs[k]={exercises:{},date:""};return state.logs[k];}
 function phaseOf(w){return w<=3?1:(w<=5?2:3);}
 const PHASE_LABEL={1:"Accumulation",2:"Intensification",3:"Deload · tests"};
-const WEEK_INTRO={1:{title:"Semaine 1 — Calibration",text:"Première semaine du bloc Accumulation. Trouve tes poids de référence avec une marge confortable (RIR 2 sur les composés), verrouille la technique et le tempo."},2:{title:"Semaine 2 — Première progression",text:"Même RIR cible. Sur les exercices terminés confortablement, la charge suggérée monte (+2,5kg composés, +1kg isolations)."},3:{title:"Semaine 3 — Fin d'accumulation",text:"Dernière semaine du bloc. Priorise la technique sur la performance brute si les deux entrent en conflit."},4:{title:"Semaine 4 — Bascule Intensification",text:"Changement de logique : le RIR cible baisse, tu t'approches plus près de l'échec sur chaque série."},5:{title:"Semaine 5 — Pic d'intensité",text:"La plus exigeante du programme. RIR proche de 0 sur beaucoup de mouvements."},6:{title:"Semaine 6 — Deload & tests",text:"Volume et charge réduits (-30 à -40%) pour dissiper la fatigue. Teste tes nouveaux maximums."}};
+const WEEK_INTRO={1:{title:"Semaine 1 — Calibration",text:"Trouve tes poids de référence."},2:{title:"Semaine 2 — Progression",text:"Charge +2.5kg composés."},3:{title:"Semaine 3 — Fin accumulation",text:"Priorise la technique."},4:{title:"Semaine 4 — Intensification",text:"RIR plus bas."},5:{title:"Semaine 5 — Pic",text:"La plus exigeante."},6:{title:"Semaine 6 — Deload",text:"Volume réduit."}};
 
 function repKg(s){if(s.kgL!==undefined){const l=parseFloat(s.kgL)||0,r=parseFloat(s.kgR)||0;return(l+r)/2;}return parseFloat(s.kg)||0;}
 function getAdjustedSets(base,exId){let s=base;const p=state.profile;if(p.sleepHours<7)s=Math.max(1,s-1);if(p.stressLevel>6)s=Math.max(1,s-1);if(p.priorityGroup){const dg=PROGRAM[activeDay].groups;if(dg.includes(p.priorityGroup))s+=1;else s=Math.max(1,s-1);}return s;}
@@ -224,92 +225,218 @@ function getRepsForExercise(ex){if(!ex.reps)return null;const idx=phaseOf(state.
 function bestSetOf(week,day,exId){const log=state.logs[logKey(week,day)];if(!log||!log.exercises[exId])return null;const done=log.exercises[exId].sets.filter(s=>s.done&&repKg(s));return done.length?done.reduce((a,b)=>repKg(b)>repKg(a)?b:a):null;}
 function previousLoggedWeek(day,exId){for(let w=state.week-1;w>=1;w--){const s=bestSetOf(w,day,exId);if(s)return{week:w,set:s};}return null;}
 function suggestedSets(day,exId,baseSets,isUni){const n=getAdjustedSets(baseSets,exId);const prev=previousLoggedWeek(day,exId);if(!prev)return Array.from({length:n},()=>isUni?{kgL:"",kgR:"",reps:"",done:false}:{kg:"",reps:"",done:false});const inc=COMPOUND_IDS.has(exId)?2.5:1;const repsStr=prev.set.reps||"";if(isUni){const prevL=parseFloat(prev.set.kgL!==undefined?prev.set.kgL:prev.set.kg)||0,prevR=parseFloat(prev.set.kgR!==undefined?prev.set.kgR:prev.set.kg)||0;const kgLStr=(Math.round((prevL+inc)*2)/2).toString(),kgRStr=(Math.round((prevR+inc)*2)/2).toString();return Array.from({length:n},()=>({kgL:kgLStr,kgR:kgRStr,reps:repsStr,done:false,suggested:true}));}const suggestedKg=parseFloat(prev.set.kg)+inc;const kgStr=(Math.round(suggestedKg*2)/2).toString();return Array.from({length:n},()=>({kg:kgStr,reps:repsStr,done:false,suggested:true}));}
-function tempoStripHTML(tempo){const[ecc,pB,con,pH]=tempo;const seg=(c,v)=>v>0?`<div class="tempo-seg ${c}" style="flex:${v}"></div>`:"";return`<div class="tempo-strip">${seg("ecc",ecc)}${seg("pause",pB)}${seg("con",con)}${seg("pause",pH)}</div><div class="tempo-legend"><span>↓${ecc}s</span><span>⏸${pB}s</span><span>↑${con}s</span><span>⏸${pH}s</span></div>`;}
-function rirLabel(rir){if(!rir)return null;const v=phaseOf(state.week)===1?rir[0]:rir[1];return"RIR "+(v===0.5?"0-1":v);}
 function estimate1RM(kg,reps){return kg*(1+reps/30);}
-function renderFlowCard(kind,items,icon,label){const w=document.createElement("div");w.className="flow-card "+kind;w.innerHTML=`<div class="flow-head"><span class="flow-icon">${icon}</span><span class="flow-title">${label}</span><span class="flow-sub">${items.length} pts ▾</span></div><ul class="flow-list">${items.map(i=>`<li>${i}</li>`).join("")}</ul>`;w.querySelector(".flow-head").onclick=()=>{const l=w.querySelector(".flow-list"),s=w.querySelector(".flow-sub");l.classList.toggle("show");s.textContent=items.length+" pts "+(l.classList.contains("show")?"▴":"▾");};return w;}
-function renderExercises(){
-    const day=PROGRAM[activeDay];if(!day)return;
-    const log=getLog(state.week,activeDay);
-    document.getElementById("warmupSlot").innerHTML="";document.getElementById("warmupSlot").appendChild(renderFlowCard("warmup",day.warmup,"🔥","Échauffement"));
-    document.getElementById("stretchSlot").innerHTML="";document.getElementById("stretchSlot").appendChild(renderFlowCard("stretch",day.stretch,"🧘","Étirements"));
-    const list=document.getElementById("exerciseList");list.innerHTML="";
-    let doneCount=0,totalCount=0,sessionVolume=0,prCount=0;
-    day.exercises.forEach((ex,i)=>{
-        if(!log.exercises[ex.id])log.exercises[ex.id]={sets:ex.tempo?suggestedSets(activeDay,ex.id,ex.sets,ex.unilateral):Array.from({length:getAdjustedSets(ex.sets||3,ex.id)},()=>ex.unilateral?{kgL:"",kgR:"",reps:"",done:false}:{kg:"",reps:"",done:false})};
-        const exLog=log.exercises[ex.id];totalCount++;if(exLog.sets.some(s=>s.done))doneCount++;
-        const prev=ex.tempo?previousLoggedWeek(activeDay,ex.id):null;
-        const pr=state.prs[ex.id];
-        const card=document.createElement("div");card.className="exercise-card"+(exLog.sets.filter(s=>s.done).length>=exLog.sets.length?" ex-done":"");
-        card.innerHTML=`<div class="ex-head"><span class="ex-name"><span class="ex-idx">${i+1}</span>${ex.name}${ex.unilateral?' <span class="meta-chip">L/R</span>':''}</span>${pr?`<span class="pr-badge">PR ${pr.kg}×${pr.reps}</span>`:""}</div>${prev?`<div class="progress-line" id="prog-${ex.id}"></div>`:(ex.tempo?`<div class="progress-line"><span class="progress-text">Première fois cette semaine</span></div>`:"")}<div class="ex-meta">${ex.tempo?`<span class="meta-chip rir">${rirLabel(ex.rir)}</span>`:`<span class="meta-chip">isométrique</span>`}${ex.sets?`<span class="meta-chip">${getAdjustedSets(ex.sets,ex.id)}×${getRepsForExercise(ex)||"hold"}</span>`:``}${ex.tempo?`<button class="tempo-toggle">tempo ▾</button>`:``}${ex.tip?`<button class="tip-toggle">💡 conseil ▾</button>`:``}</div>${ex.tempo?`<div class="tempo-detail" id="tempo-${ex.id}">${tempoStripHTML(ex.tempo)}</div>`:``}${ex.tip?`<div class="tip-detail" id="tip-${ex.id}">${ex.tip}</div>`:``}<div class="sets"></div>${ex.unilateral?`<div class="sym-chip" id="sym-${ex.id}"></div>`:``}<div class="set-actions"><button class="mini-btn add-set">+ série</button>${ex.tempo?`<button class="mini-btn rest-btn" data-rest="${COMPOUND_IDS.has(ex.id)?'compound':'isolation'}">Repos</button>`:``}</div>`;
-        list.appendChild(card);
-        if(prev){
-            const pEl=card.querySelector(`#prog-${ex.id}`);const prevKg=repKg(prev.set);const curBest=bestSetOf(state.week,activeDay,ex.id);const curKg=curBest?repKg(curBest):null;
-            let arrow="flat",diffTxt="pas encore loggé cette semaine";
-            if(curKg!==null){if(curKg>prevKg){arrow="up";diffTxt=`+${(curKg-prevKg).toFixed(1)}kg vs S${prev.week}`;}else if(curKg<prevKg){arrow="down";diffTxt=`${(curKg-prevKg).toFixed(1)}kg vs S${prev.week}`;}else{diffTxt=`= vs S${prev.week}`;}}
-            const arrowChar=arrow==="up"?"↑":arrow==="down"?"↓":"→";
-            pEl.innerHTML=`<span class="arrow ${arrow}">${arrowChar}</span><span class="progress-text">S${prev.week}: <b>${ex.unilateral?`${repKg(prev.set).toFixed(1)}kg moy.`:`${prev.set.kg}kg`}×${prev.set.reps}</b> — ${diffTxt}</span>`;
-        }
-        const tempoBtn=card.querySelector(".tempo-toggle");if(tempoBtn)tempoBtn.onclick=()=>{const d=card.querySelector(`#tempo-${ex.id}`);d.classList.toggle("show");tempoBtn.textContent=d.classList.contains("show")?"tempo ▴":"tempo ▾";};
-        const tipBtn=card.querySelector(".tip-toggle");if(tipBtn)tipBtn.onclick=()=>{const d=card.querySelector(`#tip-${ex.id}`);d.classList.toggle("show");tipBtn.textContent=d.classList.contains("show")?"💡 conseil ▴":"💡 conseil ▾";};
-        const setsWrap=card.querySelector(".sets");const symEl=card.querySelector(`#sym-${ex.id}`);
-        function updateSym(){
-            if(!symEl)return;const doneSets=exLog.sets.filter(s=>s.done&&s.kgL&&s.kgR);if(!doneSets.length){symEl.innerHTML="";return;}
-            const last=doneSets[doneSets.length-1];const l=parseFloat(last.kgL),r=parseFloat(last.kgR);const diff=Math.abs(l-r);const pct=Math.max(l,r)?Math.round(diff/Math.max(l,r)*100):0;
-            symEl.innerHTML=`<span class="sym-badge ${pct<=5?'ok':pct<=15?'warn':'bad'}">Δ G/D ${diff.toFixed(1)}kg (${pct}%)</span>`;
-        }
-        function renderSets(){
-            setsWrap.innerHTML="";
-            exLog.sets.forEach((s,si)=>{
-                const row=document.createElement("div");row.className="set-row"+(ex.unilateral?" uni":"");
-                let html=`<div class="set-num mono">${si+1}</div>`;
-                if(ex.unilateral){html+=`<input type="number" inputmode="decimal" placeholder="kg G" value="${s.kgL||''}" class="${s.suggested?'is-suggested':''}"><input type="number" inputmode="decimal" placeholder="kg D" value="${s.kgR||''}" class="${s.suggested?'is-suggested':''}"><input type="number" inputmode="numeric" placeholder="${getRepsForExercise(ex)||'reps'}" value="${s.reps}" class="${s.suggested?'is-suggested':''}"><button class="done-toggle ${s.done?'on':''}">${s.done?'✓':''}</button><button class="delete-set">✕</button>`;}
-                else {html+=`<div class="kg-wrap"><button class="step-btn step-down">−</button><input type="number" inputmode="decimal" placeholder="kg" value="${s.kg}" class="${s.suggested?'is-suggested':''}"><button class="step-btn step-up">+</button></div><input type="number" inputmode="numeric" placeholder="${getRepsForExercise(ex)||'reps'}" value="${s.reps}" class="${s.suggested?'is-suggested':''}"><button class="done-toggle ${s.done?'on':''}">${s.done?'✓':''}</button><button class="delete-set">✕</button>`;}
-                row.innerHTML=html;
-                if(ex.unilateral){
-                    const [_,kgL,kgR,reps,doneBtn,delBtn]=row.children;
-                    kgL.oninput=()=>{s.kgL=kgL.value;s.suggested=false;kgL.classList.remove('is-suggested');saveState();};
-                    kgR.oninput=()=>{s.kgR=kgR.value;s.suggested=false;kgR.classList.remove('is-suggested');saveState();};
-                    reps.oninput=()=>{s.reps=reps.value;s.suggested=false;reps.classList.remove('is-suggested');saveState();};
-                    doneBtn.onclick=()=>{s.done=!s.done;if(s.done&&s.kgL&&s.kgR&&s.reps&&checkPR(ex.id,repKg(s),parseFloat(s.reps)))prCount++;log.date=todayISO();saveState();renderExercises();renderWeekStepper();};
-                    delBtn.onclick=()=>{if(exLog.sets.length<=1)return;exLog.sets.splice(si,1);saveState();renderSets();};
-                }else{
-                    const [_,kgWrap,reps,doneBtn,delBtn]=row.children;
-                    const stepDown=kgWrap.querySelector(".step-down"),kgInput=kgWrap.querySelector("input"),stepUp=kgWrap.querySelector(".step-up");
-                    kgInput.oninput=()=>{s.kg=kgInput.value;s.suggested=false;kgInput.classList.remove('is-suggested');saveState();};
-                    const applyStep=(dir)=>{const cur=parseFloat(kgInput.value)||0;const next=Math.max(0,Math.round((cur+dir*(COMPOUND_IDS.has(ex.id)?2.5:1))*2)/2);kgInput.value=next;s.kg=String(next);s.suggested=false;kgInput.classList.remove('is-suggested');saveState();};
-                    stepDown.onclick=()=>applyStep(-1);stepUp.onclick=()=>applyStep(1);
-                    reps.oninput=()=>{s.reps=reps.value;s.suggested=false;reps.classList.remove('is-suggested');saveState();};
-                    doneBtn.onclick=()=>{s.done=!s.done;if(s.done&&s.kg&&s.reps&&checkPR(ex.id,parseFloat(s.kg),parseFloat(s.reps)))prCount++;log.date=todayISO();saveState();renderExercises();renderWeekStepper();};
-                    delBtn.onclick=()=>{if(exLog.sets.length<=1)return;exLog.sets.splice(si,1);saveState();renderSets();};
-                }
-                setsWrap.appendChild(row);
-                if(s.done)sessionVolume+=repKg(s)*(parseInt(s.reps)||0);
-            });
-            updateSym();
-        }
-        renderSets();
-        card.querySelector(".add-set").onclick=()=>{exLog.sets.push(ex.unilateral?{kgL:"",kgR:"",reps:"",done:false}:{kg:"",reps:"",done:false});saveState();renderSets();};
-        const restBtn=card.querySelector("[data-rest]");if(restBtn)restBtn.onclick=()=>startTimer(restBtn.dataset.rest,ex.name);
-    });
-    document.getElementById("dayProgress").textContent=doneCount+"/"+totalCount+" exercices";
-    document.getElementById("completeBanner").classList.toggle("show",totalCount>0&&doneCount===totalCount);
-    const summaryEl=document.getElementById("sessionSummary");
-    if(doneCount>0){summaryEl.classList.add("show");summaryEl.innerHTML=`<strong>Résumé</strong> Volume total : <b>${sessionVolume.toFixed(0)} kg</b> · PR aujourd'hui : <b>${prCount}</b><br>Exercices complétés : ${doneCount}/${totalCount}`;}
-    else summaryEl.classList.remove("show");
-}
-function checkPR(exId,kg,reps){const est=estimate1RM(kg,reps);const existing=state.prs[exId];if(!existing||est>estimate1RM(existing.kg,existing.reps)){state.prs[exId]={kg,reps,date:todayISO()};saveState();return true;}return false;}
 
-// Timer
+// ========== RENDU ==========
+function renderFlowCard(kind,items,icon,label){const w=document.createElement("div");w.className="flow-card "+kind;w.innerHTML=`<div class="flow-head"><span class="flow-icon">${icon}</span><span class="flow-title">${label}</span><span class="flow-sub">${items.length} pts ▾</span></div><ul class="flow-list">${items.map(i=>`<li>${i}</li>`).join("")}</ul>`;w.querySelector(".flow-head").onclick=()=>{const l=w.querySelector(".flow-list"),s=w.querySelector(".flow-sub");l.classList.toggle("show");s.textContent=items.length+" pts "+(l.classList.contains("show")?"▴":"▾");};return w;}
+
+// Mise à jour ciblée de l'interface après une action sur une série
+function updateUIAfterSetChange() {
+    const log = getLog(state.week, activeDay);
+    const day = PROGRAM[activeDay];
+    let doneCount=0, totalCount=0, sessionVolume=0;
+    day.exercises.forEach(ex => {
+        const exLog = log.exercises[ex.id];
+        if (!exLog) return;
+        totalCount++;
+        const hasDone = exLog.sets.some(s => s.done);
+        if (hasDone) doneCount++;
+        exLog.sets.forEach(s => { if (s.done) sessionVolume += repKg(s)*(parseInt(s.reps)||0); });
+    });
+    document.getElementById("dayProgress").textContent = doneCount+"/"+totalCount+" exercices";
+    document.getElementById("completeBanner").classList.toggle("show", totalCount>0 && doneCount===totalCount);
+    const summaryEl = document.getElementById("sessionSummary");
+    if (doneCount>0) {
+        summaryEl.classList.add("show");
+        summaryEl.innerHTML = `<strong>Résumé</strong> Volume total : <b>${sessionVolume.toFixed(0)} kg</b>`;
+    } else summaryEl.classList.remove("show");
+    // Mettre à jour la barre de progression globale
+    renderWeekStepper();
+    saveState();
+}
+
+// Gestion des clics sur les boutons des séries via délégation d'événements
+document.getElementById("exerciseList").addEventListener("click", function(e) {
+    const target = e.target;
+    const row = target.closest(".set-row");
+    if (!row) return;
+    const card = row.closest(".exercise-card");
+    if (!card) return;
+    const exId = card.querySelector(".sets").dataset.ex;
+    const day = PROGRAM[activeDay];
+    const ex = day.exercises.find(ex => ex.id === exId);
+    if (!ex) return;
+    const log = getLog(state.week, activeDay);
+    const exLog = log.exercises[exId];
+    if (!exLog) return;
+    const setsWrap = card.querySelector(".sets");
+    const idx = Array.from(setsWrap.children).indexOf(row);
+    if (idx === -1) return;
+    const s = exLog.sets[idx];
+    if (!s) return;
+
+    // Bouton "done"
+    if (target.classList.contains("done-toggle") || target.closest(".done-toggle")) {
+        s.done = !s.done;
+        if (s.done) {
+            if (ex.tempo && s.kg && s.reps) checkPR(ex.id, parseFloat(s.kg), parseFloat(s.reps));
+            else if (ex.unilateral && s.kgL && s.kgR && s.reps) checkPR(ex.id, repKg(s), parseFloat(s.reps));
+            log.date = todayISO();
+        }
+        // Mettre à jour le style du bouton
+        const btn = row.querySelector(".done-toggle");
+        if (btn) { btn.classList.toggle("on", s.done); btn.textContent = s.done ? "✓" : ""; }
+        updateUIAfterSetChange();
+    }
+    // Bouton "delete"
+    else if (target.classList.contains("delete-set") || target.closest(".delete-set")) {
+        if (exLog.sets.length <= 1) return;
+        exLog.sets.splice(idx, 1);
+        // Reconstruire uniquement les séries de cet exercice
+        renderSetsForExercise(card, ex, exLog);
+        updateUIAfterSetChange();
+    }
+    // Bouton "add-set" est géré par un autre listener, mais pourrait être inclus ici
+});
+
+// Recréer le contenu des séries pour un exercice donné
+function renderSetsForExercise(card, ex, exLog) {
+    const setsWrap = card.querySelector(".sets");
+    setsWrap.innerHTML = "";
+    exLog.sets.forEach((s, si) => {
+        const row = document.createElement("div");
+        row.className = "set-row" + (ex.unilateral ? " uni" : "");
+        let html = `<div class="set-num mono">${si+1}</div>`;
+        if (ex.unilateral) {
+            html += `<input type="number" inputmode="decimal" placeholder="kg G" value="${s.kgL||''}" class="${s.suggested?'is-suggested':''}">`;
+            html += `<input type="number" inputmode="decimal" placeholder="kg D" value="${s.kgR||''}" class="${s.suggested?'is-suggested':''}">`;
+            html += `<input type="number" inputmode="numeric" placeholder="${getRepsForExercise(ex)||'reps'}" value="${s.reps}" class="${s.suggested?'is-suggested':''}">`;
+        } else {
+            html += `<div class="kg-wrap"><button class="step-btn step-down">−</button><input type="number" inputmode="decimal" placeholder="kg" value="${s.kg}" class="${s.suggested?'is-suggested':''}"><button class="step-btn step-up">+</button></div>`;
+            html += `<input type="number" inputmode="numeric" placeholder="${getRepsForExercise(ex)||'reps'}" value="${s.reps}" class="${s.suggested?'is-suggested':''}">`;
+        }
+        html += `<button class="done-toggle ${s.done?'on':''}">${s.done?'✓':''}</button>`;
+        html += `<button class="delete-set">✕</button>`;
+        row.innerHTML = html;
+
+        // Ajout des écouteurs pour les inputs et les boutons step
+        if (!ex.unilateral) {
+            const kgWrap = row.querySelector(".kg-wrap");
+            const kgInput = kgWrap.querySelector("input");
+            const stepDown = kgWrap.querySelector(".step-down");
+            const stepUp = kgWrap.querySelector(".step-up");
+            kgInput.addEventListener("input", () => { s.kg = kgInput.value; s.suggested = false; kgInput.classList.remove("is-suggested"); saveState(); });
+            const step = COMPOUND_IDS.has(ex.id) ? 2.5 : 1;
+            stepDown.addEventListener("click", (e) => { e.stopPropagation(); let cur = parseFloat(kgInput.value) || 0; cur = Math.max(0, cur - step); kgInput.value = cur; s.kg = cur.toString(); s.suggested = false; kgInput.classList.remove("is-suggested"); saveState(); });
+            stepUp.addEventListener("click", (e) => { e.stopPropagation(); let cur = parseFloat(kgInput.value) || 0; cur += step; kgInput.value = cur; s.kg = cur.toString(); s.suggested = false; kgInput.classList.remove("is-suggested"); saveState(); });
+            const repsInput = row.querySelector("input[inputmode='numeric']");
+            repsInput.addEventListener("input", () => { s.reps = repsInput.value; s.suggested = false; repsInput.classList.remove("is-suggested"); saveState(); });
+        } else {
+            const [kgL, kgR, repsInput] = row.querySelectorAll("input");
+            kgL.addEventListener("input", () => { s.kgL = kgL.value; s.suggested = false; kgL.classList.remove("is-suggested"); saveState(); });
+            kgR.addEventListener("input", () => { s.kgR = kgR.value; s.suggested = false; kgR.classList.remove("is-suggested"); saveState(); });
+            repsInput.addEventListener("input", () => { s.reps = repsInput.value; s.suggested = false; repsInput.classList.remove("is-suggested"); saveState(); });
+        }
+        setsWrap.appendChild(row);
+    });
+    // Mise à jour de la symétrie
+    const symEl = card.querySelector(".sym-chip");
+    if (symEl) {
+        const doneSets = exLog.sets.filter(s => s.done && s.kgL && s.kgR);
+        if (doneSets.length) {
+            const last = doneSets[doneSets.length-1];
+            const l = parseFloat(last.kgL), r = parseFloat(last.kgR);
+            const diff = Math.abs(l-r);
+            const pct = Math.max(l,r) ? Math.round(diff/Math.max(l,r)*100) : 0;
+            symEl.innerHTML = `<span class="sym-badge ${pct<=5?'ok':pct<=15?'warn':'bad'}">Δ G/D ${diff.toFixed(1)}kg (${pct}%)</span>`;
+        } else symEl.innerHTML = "";
+    }
+    // Mise à jour du bouton "add-set"
+    const addBtn = card.querySelector(".add-set");
+    if (addBtn) {
+        addBtn.onclick = () => {
+            exLog.sets.push(ex.unilateral ? {kgL:"",kgR:"",reps:"",done:false} : {kg:"",reps:"",done:false});
+            renderSetsForExercise(card, ex, exLog);
+            updateUIAfterSetChange();
+        };
+    }
+    // Bouton repos
+    const restBtn = card.querySelector(".rest-btn");
+    if (restBtn) restBtn.onclick = () => startTimer(restBtn.dataset.rest, ex.name);
+}
+
+function renderExercises() {
+    const day = PROGRAM[activeDay];
+    if (!day) return;
+    const log = getLog(state.week, activeDay);
+    document.getElementById("warmupSlot").innerHTML = "";
+    document.getElementById("warmupSlot").appendChild(renderFlowCard("warmup", day.warmup, "🔥", "Échauffement"));
+    document.getElementById("stretchSlot").innerHTML = "";
+    document.getElementById("stretchSlot").appendChild(renderFlowCard("stretch", day.stretch, "🧘", "Étirements"));
+    const list = document.getElementById("exerciseList");
+    list.innerHTML = "";
+    day.exercises.forEach((ex, i) => {
+        if (!log.exercises[ex.id]) {
+            log.exercises[ex.id] = {
+                sets: ex.tempo ? suggestedSets(activeDay, ex.id, ex.sets, ex.unilateral) : Array.from({ length: getAdjustedSets(ex.sets || 3, ex.id) }, () => ex.unilateral ? { kgL: "", kgR: "", reps: "", done: false } : { kg: "", reps: "", done: false })
+            };
+        }
+        const exLog = log.exercises[ex.id];
+        const pr = state.prs[ex.id];
+        const card = document.createElement("div");
+        card.className = "exercise-card" + (exLog.sets.filter(s => s.done).length >= exLog.sets.length ? " ex-done" : "");
+        card.innerHTML = `
+            <div class="ex-head"><span class="ex-name"><span class="ex-idx">${i+1}</span>${ex.name}${ex.unilateral ? ' <span class="meta-chip">L/R</span>' : ''}</span>${pr ? `<span class="pr-badge">PR ${pr.kg}×${pr.reps}</span>` : ""}</div>
+            ${ex.tempo ? `<div class="ex-meta"><span class="meta-chip rir">RIR ${phaseOf(state.week)===1?ex.rir[0]:ex.rir[1]}</span><span class="meta-chip">${getAdjustedSets(ex.sets, ex.id)}×${getRepsForExercise(ex)||"hold"}</span>${ex.tempo?`<button class="tempo-toggle">tempo ▾</button>`:''}${ex.tip?`<button class="tip-toggle">💡 conseil ▾</button>`:''}</div>` : (ex.tip ? `<div class="ex-meta"><button class="tip-toggle">💡 conseil ▾</button></div>` : '')}
+            ${ex.tempo ? `<div class="tempo-detail" id="tempo-${ex.id}" style="display:none;">${tempoStripHTML(ex.tempo)}</div>` : ''}
+            ${ex.tip ? `<div class="tip-detail" id="tip-${ex.id}" style="display:none;">${ex.tip}</div>` : ''}
+            <div class="sets" data-ex="${ex.id}"></div>
+            ${ex.unilateral ? `<div class="sym-chip" id="sym-${ex.id}"></div>` : ''}
+            <div class="set-actions"><button class="mini-btn add-set">+ série</button>${ex.tempo ? `<button class="mini-btn rest-btn" data-rest="${COMPOUND_IDS.has(ex.id)?'compound':'isolation'}">Repos</button>` : ''}</div>
+        `;
+        list.appendChild(card);
+        // Initialiser les séries
+        renderSetsForExercise(card, ex, exLog);
+        // Toggle tempo/conseil
+        const tempoBtn = card.querySelector(".tempo-toggle");
+        if (tempoBtn) tempoBtn.addEventListener("click", () => {
+            const detail = card.querySelector(`#tempo-${ex.id}`);
+            detail.style.display = detail.style.display === "block" ? "none" : "block";
+            tempoBtn.textContent = detail.style.display === "block" ? "tempo ▴" : "tempo ▾";
+        });
+        const tipBtn = card.querySelector(".tip-toggle");
+        if (tipBtn) tipBtn.addEventListener("click", () => {
+            const detail = card.querySelector(`#tip-${ex.id}`);
+            detail.style.display = detail.style.display === "block" ? "none" : "block";
+            tipBtn.textContent = detail.style.display === "block" ? "💡 conseil ▴" : "💡 conseil ▾";
+        });
+    });
+    updateUIAfterSetChange();
+}
+
+function tempoStripHTML(tempo) {
+    const [ecc, pB, con, pH] = tempo;
+    const seg = (c,v) => v>0 ? `<div class="tempo-seg ${c}" style="flex:${v}"></div>` : "";
+    return `<div class="tempo-strip">${seg("ecc",ecc)}${seg("pause",pB)}${seg("con",con)}${seg("pause",pH)}</div><div class="tempo-legend"><span>↓${ecc}s</span><span>⏸${pB}s</span><span>↑${con}s</span><span>⏸${pH}s</span></div>`;
+}
+
+function checkPR(exId, kg, reps) {
+    const est = estimate1RM(kg, reps);
+    const existing = state.prs[exId];
+    if (!existing || est > estimate1RM(existing.kg, existing.reps)) {
+        state.prs[exId] = { kg, reps, date: todayISO() };
+        return true;
+    }
+    return false;
+}
+
+// ========== TIMER ==========
 let timerInterval=null;
 function beep(){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();[0,0.18,0.36].forEach((delay,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type="sine";o.frequency.value=i<2?880:1175;g.gain.value=0.001;const t=ctx.currentTime+delay;g.gain.exponentialRampToValueAtTime(0.18,t+0.01);g.gain.exponentialRampToValueAtTime(0.001,t+0.15);o.start(t);o.stop(t+0.16);});}catch(e){}}
 function startTimer(type,label){let seconds=REST_BY_TYPE[type]??90;let remaining=seconds;document.getElementById("timerOverlay").classList.add("show");document.getElementById("timerLabel").textContent="Repos — "+label;clearInterval(timerInterval);const numEl=document.getElementById("timerNum");function tick(){const m=String(Math.floor(remaining/60)).padStart(2,"0"),s=String(remaining%60).padStart(2,"0");numEl.textContent=m+":"+s;if(remaining<=0){clearInterval(timerInterval);if(navigator.vibrate)navigator.vibrate([150,80,150]);beep();return;}remaining--;}tick();timerInterval=setInterval(tick,1000);}
 document.getElementById("timerClose").onclick=()=>{document.getElementById("timerOverlay").classList.remove("show");clearInterval(timerInterval);};
 
-// Wake lock
-if("wakeLock" in navigator){navigator.wakeLock.request("screen").catch(()=>{});}
-
-// Modal & tabs
+// ========== MODAL & TABS ==========
 document.getElementById("gearBtn").onclick=()=>document.getElementById("modalOverlay").classList.add("show");
 document.getElementById("modalClose").onclick=()=>document.getElementById("modalOverlay").classList.remove("show");
 document.querySelectorAll(".tab").forEach(tab=>{
@@ -321,7 +448,7 @@ document.querySelectorAll(".tab").forEach(tab=>{
     };
 });
 
-// Measurements
+// ========== MEASUREMENTS ==========
 function bodyFatDW(sum4mm,age){let C,M;if(age<20){C=1.1620;M=0.0630;}else if(age<30){C=1.1631;M=0.0632;}else if(age<40){C=1.1422;M=0.0544;}else if(age<50){C=1.1620;M=0.0700;}else{C=1.1715;M=0.0779;}const density=C-M*Math.log10(sum4mm);const bf=(495/density)-450;return Math.round(bf*10)/10;}
 function renderMeasurements(){
     const wrap=document.getElementById("mHistory");
@@ -334,9 +461,10 @@ function drawChart(){
     const canvas=document.getElementById("measChart");if(!canvas)return;const ctx=canvas.getContext("2d");const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);
     const data=state.measurements.filter(m=>m.shoulders).slice(-10);if(data.length<2)return;
     const vals=data.map(m=>m.shoulders);const max=Math.max(...vals,100),min=Math.min(...vals,50),range=max-min||1;
-    ctx.beginPath();ctx.strokeStyle=getComputedStyle(document.body).getPropertyValue('--signal').trim();ctx.lineWidth=2;
+    ctx.beginPath();ctx.strokeStyle=getComputedStyle(document.body).getPropertyValue('--signal').trim()||"#E8A33D";ctx.lineWidth=2;
     data.forEach((m,i)=>{const x=(i/(data.length-1))*w;const y=h-((m.shoulders-min)/range)*h;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});
     ctx.stroke();
+    canvas.style.display="block";
 }
 document.getElementById("mAdd").onclick=()=>{
     const shoulders=parseFloat(document.getElementById("mShoulders").value)||null;
@@ -352,7 +480,7 @@ document.getElementById("mAdd").onclick=()=>{
     ["mShoulders","mWaist","mPecs","mArmL","mArmR","mThighL","mThighR","skBiceps","skTriceps","skSubscap","skSuprailiac"].forEach(id=>document.getElementById(id).value="");
 };
 
-// Profile save
+// ========== PROFILE ==========
 document.getElementById("saveProfile").onclick=()=>{
     state.profile.sleepHours=parseFloat(document.getElementById("sleepHours").value)||7;
     state.profile.stressLevel=parseInt(document.getElementById("stressLevel").value)||3;
@@ -362,7 +490,7 @@ document.getElementById("saveProfile").onclick=()=>{
     renderAll();
 };
 
-// Mobility test
+// ========== MOBILITY ==========
 document.getElementById("runMobilityTest").onclick=()=>{
     let issues=[];
     if(!confirm("Pouvez-vous toucher vos orteils sans plier les genoux ?"))issues.push("Ischio-jambiers raides");
@@ -372,7 +500,7 @@ document.getElementById("runMobilityTest").onclick=()=>{
     document.getElementById("mobilityExercises").innerHTML=issues.includes("Ischio-jambiers")?"👉 Correctif : Good morning léger, étirements ischios.":"";
 };
 
-// Data import/export
+// ========== DATA ==========
 document.getElementById("exportBtn").onclick=()=>{
     const ta=document.getElementById("importArea");
     ta.value=JSON.stringify(state,null,2);
@@ -383,11 +511,11 @@ document.getElementById("importBtn").onclick=()=>{
 };
 document.getElementById("resetBtn").onclick=()=>{if(confirm("Réinitialiser ?")){state=defaultState();saveState();renderAll();}};
 
-// Theme
+// ========== THEME ==========
 document.getElementById("themeToggle").onclick=()=>{state.theme=state.theme==='light'?'dark':'light';document.body.className=state.theme;saveState();};
 document.body.className=state.theme;
 
-// Week stepper & nav
+// ========== WEEK STEPPER & PROGRESS ==========
 function dayCompletionPct(week,day){const ex=PROGRAM[day].exercises.filter(e=>e.tempo);if(!ex.length)return 0;const log=state.logs[logKey(week,day)];if(!log)return 0;const done=ex.filter(e=>log.exercises[e.id]&&log.exercises[e.id].sets.some(s=>s.done)).length;return Math.round(done/ex.length*100);}
 function weekCompletionPct(week){let sum=0,n=0;DAY_ORDER.forEach(d=>{if(PROGRAM[d].exercises.some(e=>e.tempo)){sum+=dayCompletionPct(week,d);n++;}});return n?Math.round(sum/n):0;}
 function computeProgramProgress(){let total=0,done=0;for(let w=1;w<=TOTAL_WEEKS;w++){DAY_ORDER.forEach(d=>{const ex=PROGRAM[d].exercises.filter(e=>e.tempo);total+=ex.length;const log=state.logs[logKey(w,d)];if(log)ex.forEach(e=>{if(log.exercises[e.id]&&log.exercises[e.id].sets.some(s=>s.done))done++;});});}return total?Math.round(done/total*100):0;}
@@ -404,10 +532,18 @@ document.getElementById("weekPrev").onclick=()=>{if(state.week>1){state.week--;s
 document.getElementById("weekNext").onclick=()=>{if(state.week<TOTAL_WEEKS){state.week++;saveState();renderAll();}};
 document.getElementById("weekCompleteBtn").onclick=()=>{if(state.week<TOTAL_WEEKS){state.week++;saveState();renderAll();}};
 
+// ========== DAY NAV ==========
 const dayNav=document.getElementById("dayNav");DAY_ORDER.forEach(d=>{const b=document.createElement("button");b.className="day-btn";b.innerHTML=DAY_LABEL[d]+'<span class="grp">'+PROGRAM[d].groups.join("·")+'</span>';b.dataset.day=d;b.onclick=()=>{activeDay=d;renderDayNav();renderExercises();};dayNav.appendChild(b);});
 function renderDayNav(){[...dayNav.children].forEach(b=>{b.classList.toggle("active",b.dataset.day===activeDay);b.classList.toggle("complete",dayCompletionPct(state.week,b.dataset.day)===100);});document.getElementById("dayTitle").textContent=PROGRAM[activeDay].title+(PROGRAM[activeDay].sub?" · "+PROGRAM[activeDay].sub:"");}
-function renderAll(){renderWeekStepper();renderDayNav();renderExercises();}
-state=loadState();renderAll();
+
+// ========== INIT ==========
+function renderAll(){
+    renderWeekStepper();
+    renderDayNav();
+    renderExercises();
+}
+state=loadState();
+renderAll();
 })();
 </script>
 </body>
