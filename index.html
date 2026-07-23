@@ -3,27 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Fréquence</title>
+<title>Fréquence Pro</title>
 <style>
   :root{
-    --bg:#12141A;
-    --surface:#1B1E27;
-    --surface2:#232733;
-    --line:#2C303C;
-    --text:#EDEEF2;
-    --muted:#8A8FA3;
-    --muted2:#5C6072;
-    --signal:#E8A33D;
-    --pulse:#4FD8D0;
-    --danger:#E85D4A;
-    --good:#6FCF97;
-    --warm:#F0A868;
-    --cool:#5FB8D4;
-    --radius:10px;
+    --bg:#12141A; --surface:#1B1E27; --surface2:#232733; --line:#2C303C;
+    --text:#EDEEF2; --muted:#8A8FA3; --muted2:#5C6072;
+    --signal:#E8A33D; --pulse:#4FD8D0; --danger:#E85D4A; --good:#6FCF97;
+    --warm:#F0A868; --cool:#5FB8D4; --radius:10px;
+  }
+  body.light{
+    --bg:#F5F5F7; --surface:#FFFFFF; --surface2:#F0F0F5; --line:#E0E0E6;
+    --text:#1A1A2E; --muted:#6B7280; --muted2:#9CA3AF;
+    --signal:#D97706; --pulse:#0D9488; --danger:#DC2626; --good:#059669;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
-    font-family:'Inter','Helvetica Neue',Arial,sans-serif; -webkit-font-smoothing:antialiased;}
+    font-family:'Inter',-apple-system,sans-serif; -webkit-font-smoothing:antialiased;}
   .mono{font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;}
   button{font-family:inherit;}
   h1,h2,h3{margin:0; font-weight:700; letter-spacing:-0.01em;}
@@ -36,11 +31,11 @@
     position:sticky; top:0; z-index:20; background:rgba(18,20,26,0.95); backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line); padding:12px 16px 0;
   }
+  body.light header.top{ background:rgba(245,245,247,0.95); }
   .brand-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
   .brand{font-size:18px; font-weight:800; letter-spacing:-0.02em;}
   .gear-btn{background:none; border:none; color:var(--muted); font-size:18px; padding:4px; cursor:pointer;}
 
-  /* Overall program progress — motivating, at a glance */
   .program-bar-wrap{margin-bottom:10px;}
   .program-bar-track{height:6px; border-radius:4px; background:var(--surface2); overflow:hidden;}
   .program-bar-fill{height:100%; background:linear-gradient(90deg, var(--pulse), var(--signal)); border-radius:4px; transition:width .3s;}
@@ -76,7 +71,6 @@
   .complete-banner{display:none; background:linear-gradient(90deg, rgba(111,207,151,0.15), rgba(79,216,208,0.1)); border:1px solid rgba(111,207,151,0.35); color:var(--good); font-size:12.5px; font-weight:600; padding:10px 12px; border-radius:9px; margin-bottom:12px; text-align:center;}
   .complete-banner.show{display:block;}
 
-  /* Warm-up / stretch blocks */
   .flow-card{border-radius:var(--radius); padding:13px 14px; margin-bottom:12px; border:1px solid var(--line);}
   .flow-card.warmup{background:#F0C89A; border-color:#E0A868;}
   .flow-card.stretch{background:#BCE4EC; border-color:#8FCBD8;}
@@ -93,7 +87,15 @@
   .flow-card.stretch .flow-list li::before{color:#2C4448;}
   .flow-list li b{font-weight:800;}
 
-  .exercise-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin-bottom:10px;}
+  .exercise-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin-bottom:10px; transition:opacity .2s, border-color .2s;}
+  .exercise-card.ex-done{opacity:0.55; border-color:var(--good);}
+  .kg-wrap{display:flex; align-items:center; gap:4px;}
+  .kg-wrap input{flex:1; min-width:0;}
+  .step-btn{width:26px; height:36px; flex-shrink:0; background:var(--surface2); border:1px solid var(--line); color:var(--text); border-radius:6px; font-size:15px; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; user-select:none;}
+  .week-complete-banner{display:flex; align-items:center; justify-content:space-between; gap:10px; background:rgba(111,207,151,0.1); border:1px solid rgba(111,207,151,0.35); border-radius:9px; padding:10px 12px; margin-bottom:14px;}
+  .week-complete-banner span{font-size:12.5px; color:var(--good); font-weight:600;}
+  .week-complete-banner button{background:var(--good); border:none; color:#0c1a12; font-size:12px; font-weight:700; padding:8px 12px; border-radius:7px; cursor:pointer; flex-shrink:0;}
+  #exerciseList{touch-action:pan-y;}
   .ex-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
   .ex-name{font-size:14.5px; font-weight:700; line-height:1.3;}
   .ex-idx{color:var(--muted2); font-family:'IBM Plex Mono',monospace; font-size:12px; margin-right:6px;}
@@ -109,8 +111,8 @@
   .ex-meta{display:flex; gap:8px; margin-top:9px; flex-wrap:wrap; align-items:center;}
   .meta-chip{font-size:10.5px; font-family:'IBM Plex Mono',monospace; color:var(--muted); background:var(--surface2); padding:3px 7px; border-radius:5px;}
   .meta-chip.rir{color:var(--signal); background:rgba(232,163,61,0.1);}
-  .tempo-toggle{background:none; border:none; color:var(--pulse); font-size:10.5px; font-family:'IBM Plex Mono',monospace; cursor:pointer; padding:3px 0;}
-  .tip-toggle{background:none; border:none; color:var(--signal); font-size:10.5px; font-family:'IBM Plex Mono',monospace; cursor:pointer; padding:3px 0;}
+  .tempo-toggle,.tip-toggle{background:none; border:none; color:var(--pulse); font-size:10.5px; font-family:'IBM Plex Mono',monospace; cursor:pointer; padding:3px 0;}
+  .tip-toggle{color:var(--signal);}
   .tip-detail{display:none; margin-top:9px; font-size:13px; line-height:1.5; color:var(--text); background:var(--surface2); border-left:2px solid var(--signal); padding:9px 11px; border-radius:0 7px 7px 0;}
   .tip-detail.show{display:block;}
   .tempo-detail{display:none; margin-top:8px;}
@@ -123,7 +125,13 @@
   .tempo-legend{display:flex; gap:12px; margin-top:5px; font-size:9.5px; color:var(--muted2); font-family:'IBM Plex Mono',monospace;}
 
   .sets{margin-top:12px; display:flex; flex-direction:column; gap:6px;}
-  .set-row{display:grid; grid-template-columns:22px 1fr 1fr 40px; gap:8px; align-items:center;}
+  .set-row{display:grid; grid-template-columns:22px 1fr 1fr 40px 20px; gap:8px; align-items:center;}
+  .set-row.uni{grid-template-columns:20px 1fr 1fr 0.9fr 40px 20px;}
+  .sym-chip{margin-top:8px;}
+  .sym-badge{font-size:10.5px; font-family:'IBM Plex Mono',monospace; padding:3px 8px; border-radius:5px; display:inline-block;}
+  .sym-badge.ok{color:var(--good); background:rgba(111,207,151,0.12);}
+  .sym-badge.warn{color:var(--signal); background:rgba(232,163,61,0.12);}
+  .sym-badge.bad{color:var(--danger); background:rgba(232,93,74,0.12);}
   .set-num{font-size:11px; color:var(--muted2); font-family:'IBM Plex Mono',monospace;}
   .set-row input[type=number]{width:100%; background:var(--surface2); border:1px solid var(--line); color:var(--text); border-radius:6px; padding:8px; font-size:14px; font-family:'IBM Plex Mono',monospace;}
   .set-row input::placeholder{color:var(--muted2);}
@@ -135,14 +143,24 @@
   .rest-btn{background:var(--surface2); border:1px solid var(--line); color:var(--pulse);}
   .pr-badge{font-size:10px; color:#0c1a12; background:var(--signal); padding:2px 6px; border-radius:4px; font-weight:700; margin-left:6px; white-space:nowrap;}
 
+  .delete-set{background:none; border:none; color:var(--danger); cursor:pointer; font-size:16px; padding:0; width:20px; text-align:center;}
+  .session-summary{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin-top:16px; display:none;}
+  .session-summary.show{display:block;}
+  .chart-container{width:100%; height:180px; margin:10px 0; background:var(--surface2); border-radius:8px; overflow:hidden;}
+
+  .theme-toggle{background:none; border:none; font-size:18px; cursor:pointer; padding:4px; margin-left:8px;}
   .modal-overlay{position:fixed; inset:0; background:rgba(12,13,17,0.85); backdrop-filter:blur(4px); z-index:60; display:none; align-items:flex-end; justify-content:center;}
   .modal-overlay.show{display:flex;}
-  .modal-sheet{width:100%; max-width:520px; background:var(--surface); border-radius:16px 16px 0 0; padding:18px 16px 28px; border:1px solid var(--line); border-bottom:none;}
+  .modal-sheet{width:100%; max-width:520px; background:var(--surface); border-radius:16px 16px 0 0; padding:18px 16px 28px; border:1px solid var(--line); border-bottom:none; max-height:85vh; overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .modal-sheet h3{font-size:15px; margin-bottom:12px;}
   textarea{width:100%; background:var(--surface2); border:1px solid var(--line); color:var(--text); border-radius:8px; padding:10px; font-family:'IBM Plex Mono',monospace; font-size:11px; min-height:90px;}
   .io-row{display:flex; gap:8px; margin-top:8px;}
   .io-btn{flex:1; background:var(--surface2); border:1px solid var(--line); color:var(--text); padding:11px; border-radius:8px; font-size:12.5px; cursor:pointer;}
   .modal-close{width:100%; margin-top:14px; background:none; border:none; color:var(--muted); padding:8px; font-size:13px;}
+  .field-row{display:flex; gap:8px; margin-bottom:10px;}
+  .field-row label{display:block; font-size:11px; color:var(--muted); margin-bottom:4px;}
+  .field{flex:1;}
+  .field input, .field-row input{width:100%; background:var(--surface2); border:1px solid var(--line); color:var(--text); border-radius:6px; padding:9px; font-size:14px; box-sizing:border-box;}
 
   .timer-overlay{position:fixed; inset:0; background:rgba(12,13,17,0.92); backdrop-filter:blur(6px); z-index:50; display:none; align-items:center; justify-content:center; flex-direction:column;}
   .timer-overlay.show{display:flex;}
@@ -153,12 +171,15 @@
   @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} }
 </style>
 </head>
-<body>
+<body class="dark">
 <div id="app">
   <header class="top">
     <div class="brand-row">
-      <div class="brand">Fréquence</div>
-      <button class="gear-btn" id="gearBtn" aria-label="Réglages">⚙</button>
+      <div class="brand">Fréquence Pro</div>
+      <div style="display:flex; align-items:center;">
+        <button class="theme-toggle" id="themeToggle" aria-label="Changer le thème">🌓</button>
+        <button class="gear-btn" id="gearBtn" aria-label="Réglages">⚙</button>
+      </div>
     </div>
     <div class="program-bar-wrap">
       <div class="program-bar-track"><div class="program-bar-fill" id="programBarFill" style="width:0%"></div></div>
@@ -174,6 +195,10 @@
   </header>
 
   <main>
+    <div class="week-complete-banner" id="weekCompleteBanner" style="display:none;">
+      <span id="weekCompleteText"></span>
+      <button id="weekCompleteBtn">Semaine suivante →</button>
+    </div>
     <div class="week-brief" id="weekBrief"></div>
     <div class="day-header">
       <h2 id="dayTitle"></h2>
@@ -183,12 +208,46 @@
     <div id="warmupSlot"></div>
     <div id="exerciseList"></div>
     <div id="stretchSlot"></div>
+    <div id="sessionSummary" class="session-summary"></div>
   </main>
 </div>
 
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-sheet">
-    <h3>Données</h3>
+    <h3>Mesures physiques</h3>
+    <div class="field-row">
+      <div class="field"><label>Épaules (cm)</label><input type="number" step="0.5" id="mShoulders"></div>
+      <div class="field"><label>Taille (cm)</label><input type="number" step="0.5" id="mWaist"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Pecs (cm)</label><input type="number" step="0.5" id="mPecs"></div>
+      <div class="field"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Bras gauche (cm)</label><input type="number" step="0.5" id="mArmL"></div>
+      <div class="field"><label>Bras droit (cm)</label><input type="number" step="0.5" id="mArmR"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Cuisse gauche (cm)</label><input type="number" step="0.5" id="mThighL"></div>
+      <div class="field"><label>Cuisse droite (cm)</label><input type="number" step="0.5" id="mThighR"></div>
+    </div>
+
+    <h3 style="margin-top:18px; font-size:13px;">Taux de graisse — méthode 4 plis (Durnin-Womersley)</h3>
+    <div class="field-row">
+      <div class="field"><label>Pli biceps (mm)</label><input type="number" step="0.1" id="skBiceps"></div>
+      <div class="field"><label>Pli triceps (mm)</label><input type="number" step="0.1" id="skTriceps"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Pli sous-scapulaire (mm)</label><input type="number" step="0.1" id="skSubscap"></div>
+      <div class="field"><label>Pli supra-iliaque (mm)</label><input type="number" step="0.1" id="skSuprailiac"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Âge</label><input type="number" step="1" id="mAge"></div>
+      <div class="field" style="align-self:flex-end;"><button class="mini-btn" style="padding:9px 14px; width:100%;" id="mAdd">Ajouter la mesure</button></div>
+    </div>
+    <div id="mHistory" class="mono" style="font-size:12px; color:var(--muted); margin-top:4px; max-height:160px; overflow-y:auto;"></div>
+    <div class="chart-container"><canvas id="measChart" width="300" height="150"></canvas></div>
+    <h3 style="margin-top:20px;">Données</h3>
     <button class="io-btn" id="exportBtn" style="width:100%;">Copier les données (JSON)</button>
     <div style="margin-top:12px;">
       <textarea id="importArea" placeholder="Colle un export JSON ici pour importer..."></textarea>
@@ -214,69 +273,73 @@
 /* ---------- PROGRAM DEFINITION ---------- */
 const PROGRAM = {
   lundi:   { title:"Pecs + Triceps", sub:"dominant", groups:["pecs","triceps"],
-    warmup:["<b>Général</b> — 2-3 min vélo/rameur léger ou 30 jumping jacks, pour élever la température tissulaire","<b>Articulaire</b> — rotations d'épaules 20x avant/arrière, cercles de poignets 15x","<b>Activation</b> — écartés légers au poids du corps 15 reps + pompes à vide 2×10","<b>Potentiation</b> — barre à vide sur le banc décliné 1×10, puis 1 série à 50% de la charge de travail"],
-    stretch:["Pecs en appui sur cadre de porte, 30s/côté — expire en relâchant l'épaule vers l'arrière","Triceps bras au-dessus de la tête, 30s/côté, tension légère sans forcer le coude","Croisé de l'épaule avant, 20s/côté — restaure l'amplitude après le travail en press","Respiration diaphragmatique, 3-4 cycles lents pour clôturer"],
+    warmup:["<b>Général</b> — 2-3 min vélo/rameur léger ou 30 jumping jacks","<b>Articulaire</b> — rotations d'épaules 20x avant/arrière, cercles de poignets 15x","<b>Activation</b> — écartés légers au poids du corps 15 reps + pompes à vide 2×10","<b>Potentiation</b> — barre à vide sur le banc décliné 1×10, puis 1 série à 50% de la charge de travail"],
+    stretch:["Pecs en appui sur cadre de porte, 30s/côté","Triceps bras au-dessus de la tête, 30s/côté","Croisé de l'épaule avant, 20s/côté","Respiration diaphragmatique, 3-4 cycles"],
     exercises:[
-      {id:"decline",  name:"Développé décliné (barre libre)", tempo:[2,0,1,0], rir:[2,1], tip:"Coudes à ~45° du buste (pas collés) pour cibler le bas du pec, omoplates serrées. Descends jusqu'au contact léger, ne rebondis pas sur la poitrine."},
-      {id:"inclineSm",name:"Incliné (Smith)", tempo:[2,1,1,0], rir:[1,0.5], tip:"Banc à 30-45°, pas plus — au-delà les épaules prennent le relais du haut du pec. Vise la clavicule, pas le cou."},
-      {id:"dips",     name:"Dips lestés", tempo:[2,0,1,0], rir:[1,0.5], tip:"Buste penché en avant pour cibler les pecs, coudes qui s'écartent légèrement. Descends jusqu'à un étirement franc, sans forcer si l'épaule tire."},
-      {id:"pushup",   name:"Pompes lestées", tempo:[2,0,1,0], rir:[1,0], tip:"Corps aligné tête-talons, pas de creux lombaire. Amplitude complète plutôt que vitesse d'exécution."},
-      {id:"triOhInc", name:"Triceps au-dessus tête (banc incliné, barre spéciale)", tempo:[3,1,1,0], rir:[1,0], tip:"Coudes fixes proches de la tête tout le mouvement. Le banc incliné maximise l'étirement du chef long en bas — la portion la plus productive pour l'hypertrophie."},
-      {id:"triRopeExt",name:"Triceps corde (rotation externe)", tempo:[2,1,1,1], rir:[0.5,0], tip:"Coudes collés au corps, écarte les mains en fin de mouvement pour une contraction maximale du chef latéral. Pas de balancement du buste."},
+      {id:"decline",  name:"Développé décliné (barre libre)", tempo:[2,0,1,0], rir:[2,1], tip:"Coudes à ~45° du buste, omoplates serrées. Descends jusqu'au contact léger.", sets:4, reps:["8-10","5-6"]},
+      {id:"inclineSm",name:"Incliné (Smith)", tempo:[2,1,1,0], rir:[1,0.5], tip:"Banc à 30-45°, pas plus.", sets:4, reps:["10-12","6-8"]},
+      {id:"dips",     name:"Dips lestés", tempo:[2,0,1,0], rir:[1,0.5], tip:"Buste penché en avant, coudes qui s'écartent légèrement.", sets:3, reps:["8-12","6-8"]},
+      {id:"pushup",   name:"Pompes lestées", tempo:[2,0,1,0], rir:[1,0], tip:"Corps aligné tête-talons, amplitude complète.", sets:3, reps:["10-15","8-10"]},
+      {id:"triOhInc", name:"Triceps au-dessus tête (banc incliné, barre spéciale)", tempo:[3,1,1,0], rir:[1,0], tip:"Coudes fixes proches de la tête.", sets:3, reps:["10-12","8-10"]},
+      {id:"triRopeExt",name:"Triceps corde (rotation externe)", tempo:[2,1,1,1], rir:[0.5,0], tip:"Coudes collés au corps, écarte les mains en fin de mouvement.", sets:3, reps:["12-15","10-12"]},
     ]},
   mardi:   { title:"Dos + Biceps", sub:"dominant", groups:["dos","biceps"],
-    warmup:["<b>Général</b> — 2-3 min rameur léger ou corde à sauter douce","<b>Articulaire</b> — rotations scapulaires 20x, cat-cow 10 reps lentes","<b>Activation</b> — tirage vertical à la poulie à vide 1×15, row léger à vide 1×12","<b>Potentiation</b> — 1 série à 50-60% de la charge de travail sur le premier exercice"],
-    stretch:["Grand dorsal, bras tendu latéral en appui, 30s/côté, respiration lente","Biceps, bras tendu derrière le dos, 20s/côté","Torsion douce du buste assise, 20s/côté — décompresse la colonne après les tirages","Respiration diaphragmatique, 3-4 cycles"],
+    warmup:["<b>Général</b> — 2-3 min rameur léger","<b>Articulaire</b> — rotations scapulaires 20x, cat-cow 10 reps lentes","<b>Activation</b> — tirage vertical à la poulie à vide 1×15","<b>Potentiation</b> — 1 série à 50-60% de la charge de travail"],
+    stretch:["Grand dorsal, bras tendu latéral en appui, 30s/côté","Biceps, bras tendu derrière le dos, 20s/côté","Torsion douce du buste assise, 20s/côté","Respiration diaphragmatique, 3-4 cycles"],
     exercises:[
-      {id:"tirageUniInc", name:"Tirage vertical unilatéral (banc incliné)", tempo:[2,1,2,1], rir:[1,0.5], tip:"Le coude mène le mouvement vers la hanche, pas la main. Étirement complet en haut avant de retirer."},
-      {id:"australienne", name:"Traction australienne lestée", tempo:[2,0,1,1], rir:[1.5,1], tip:"Corps gainé et rigide comme une planche, tire la poitrine vers la barre sans casser les hanches. Descente contrôlée, pas de chute libre."},
-      {id:"tirageSerre",  name:"Tirage horizontal prise serrée", tempo:[2,0,1,1], rir:[1,0.5], tip:"Buste stable, coudes qui reculent en serrant les omoplates en fin de mouvement — comme presser une orange entre les omoplates."},
-      {id:"rowUniPenche", name:"Row unilatéral haltère (buste penché, prise neutre)", tempo:[2,0,1,1], rir:[1,0], tip:"Coude proche du corps pour cibler le lat, dos plat — pas de rotation du buste pour tricher les dernières reps."},
-      {id:"curlBarre",    name:"Curl barre", tempo:[2,0,1,1], rir:[0.5,0], tip:"Coudes fixes le long du corps toute l'amplitude — la triche classique est de les projeter en avant pour aider la remontée."},
-      {id:"curlIncline",  name:"Curl incliné", tempo:[3,1,1,0], rir:[0.5,0], tip:"Bras derrière le corps sur le banc incliné pour maximiser l'étirement du biceps en bas, la position la plus productive sur ce mouvement."},
+      {id:"australienne", name:"Traction australienne lestée", tempo:[2,0,1,1], rir:[1.5,1], tip:"Corps gainé, tire la poitrine vers la barre.", sets:4, reps:["8-12","6-10"]},
+      {id:"tirageUniInc", name:"Tirage vertical unilatéral (banc incliné)", tempo:[2,1,2,1], rir:[1,0.5], tip:"Le coude mène le mouvement vers la hanche.", sets:4, reps:["10-12","6-8"], unilateral:true},
+      {id:"tirageSerre",  name:"Tirage horizontal prise serrée", tempo:[2,0,1,1], rir:[1,0.5], tip:"Coudes qui reculent en serrant les omoplates.", sets:4, reps:["10-12","6-8"]},
+      {id:"rowUniPenche", name:"Row unilatéral haltère (buste penché)", tempo:[2,0,1,1], rir:[1,0], tip:"Coude proche du corps, dos plat.", sets:3, reps:["10-12","8-10"], unilateral:true},
+      {id:"larryScott",    name:"Larry Scott unilatéral", tempo:[2,0,1,1], rir:[0.5,0], tip:"Buste calé contre le banc, bras en appui devant.", sets:3, reps:["10-12","8-10"], unilateral:true},
+      {id:"curlIncline",  name:"Curl incliné", tempo:[3,1,1,0], rir:[0.5,0], tip:"Bras derrière le corps sur le banc incliné.", sets:3, reps:["10-12","8-10"]},
+      {id:"hammerCurl",   name:"Curl marteau", tempo:[2,0,1,1], rir:[0.5,0], tip:"Prise neutre tout le mouvement.", sets:3, reps:["10-12","8-10"], unilateral:true},
     ]},
   mercredi:{ title:"Jambes", sub:"", groups:["jambes"],
-    warmup:["<b>Général</b> — 3 min vélo ou marche rapide, élever la température des grands groupes musculaires","<b>Articulaire</b> — leg swings avant/arrière et latéraux 15x/jambe, cercles de cheville 10x/côté","<b>Activation</b> — squats au poids du corps 2×15, pont fessier 1×15","<b>Potentiation</b> — 1 série de squat à 50% de la charge de travail"],
-    stretch:["Quadriceps debout, 30s/côté, bassin gainé","Ischio-jambiers assis, 30s/côté, dos droit","Mollets contre un mur, 30s/côté","Fessiers (figure 4 au sol), 20s/côté","Respiration diaphragmatique, 4-5 cycles — les jambes sont le groupe le plus exigeant en système nerveux, prends le temps de redescendre"],
+    warmup:["<b>Général</b> — 3 min vélo","<b>Articulaire</b> — leg swings 15x/jambe","<b>Activation</b> — squats poids de corps 2×15","<b>Potentiation</b> — 1 série à 50% de la charge"],
+    stretch:["Quadriceps debout, 30s/côté","Ischio-jambiers assis, 30s/côté","Mollets contre un mur, 30s/côté","Fessiers (figure 4), 20s/côté","Respiration diaphragmatique, 4-5 cycles"],
     exercises:[
-      {id:"squat",     name:"Squat (barre libre)", tempo:[2,0,1,0], rir:[2,1], tip:"Descends jusqu'à ce que les hanches passent sous les genoux, genoux dans l'axe des pieds. La profondeur prime sur la charge."},
-      {id:"goodmorning",name:"Good Morning (barre libre)", tempo:[2,1,2,0], rir:[2,1.5], tip:"La hanche recule en premier, dos neutre gainé tout le mouvement, genoux légèrement fléchis et fixes. Démarre très léger le temps que la technique soit solide."},
-      {id:"hipthrust", name:"Hip thrust (Smith)", tempo:[2,0,1,1], rir:[1,0.5], tip:"Menton rentré, pousse par les talons, verrouille en extension complète avec une pause d'1s en haut — c'est là que le fessier travaille vraiment."},
-      {id:"legext",    name:"Leg extension (poulie basse, unilatéral)", tempo:[2,0,1,1], rir:[0.5,0], tip:"Légère rotation externe de la pointe de pied pour le vaste interne, pause 1s en extension complète pour compenser la faible tension de la poulie en fin de course."},
-      {id:"legcurl",   name:"Leg curl (poulie, unilatéral)", tempo:[2,0,1,1], rir:[0.5,0], tip:"Ne cambre pas le bas du dos pour tricher l'amplitude — bassin neutre, pause en contraction max."},
-      {id:"molletsDeb",name:"Mollets debout (Smith)", tempo:[2,1,1,1], rir:[0.5,0], tip:"Amplitude complète : étirement franc en bas, contraction pic en haut. Les mollets répondent mieux à l'amplitude qu'à la charge lourde partielle."},
+      {id:"squat",     name:"Squat (barre libre)", tempo:[2,0,1,0], rir:[2,1], tip:"Profondeur prime sur la charge.", sets:4, reps:["8-10","5-6"]},
+      {id:"goodmorning",name:"Good Morning (barre libre)", tempo:[2,1,2,0], rir:[2,1.5], tip:"La hanche recule en premier.", sets:3, reps:["10-12","8-10"]},
+      {id:"hipthrust", name:"Hip thrust (Smith)", tempo:[2,0,1,1], rir:[1,0.5], tip:"Pause 1s en haut.", sets:3, reps:["10-12","8-10"]},
+      {id:"legext",    name:"Leg extension (poulie basse, unilatéral)", tempo:[2,0,1,1], rir:[0.5,0], tip:"Rotation externe de la pointe de pied.", sets:3, reps:["12-15","10-12"], unilateral:true},
+      {id:"legcurl",   name:"Leg curl (poulie, unilatéral)", tempo:[2,0,1,1], rir:[0.5,0], tip:"Bassin neutre.", sets:3, reps:["12-15","10-12"], unilateral:true},
+      {id:"molletsDeb",name:"Mollets debout (Smith)", tempo:[2,1,1,1], rir:[0.5,0], tip:"Amplitude complète.", sets:5, reps:["12-15","10-12"]},
     ]},
   jeudi:   { title:"Pecs + Triceps", sub:"rappel léger", groups:["pecs","triceps"],
-    warmup:["<b>Général</b> — 1-2 min mobilité légère (séance de rappel, pas besoin d'un long général)","<b>Articulaire</b> — rotations d'épaules 15x","<b>Activation</b> — pompes légères 2×8, écartés légers 1×12","<b>Potentiation</b> — pas nécessaire ici, l'intensité de la séance reste sous-maximale"],
-    stretch:["Pecs cadre de porte, 20s/côté","Triceps au-dessus de la tête, 20s/côté","Respiration diaphragmatique, 2-3 cycles"],
+    warmup:["<b>Général</b> — 1-2 min mobilité légère","<b>Articulaire</b> — rotations d'épaules 15x","<b>Activation</b> — pompes légères 2×8","<b>Potentiation</b> — pas nécessaire"],
+    stretch:["Pecs cadre de porte, 20s/côté","Triceps au-dessus de la tête, 20s/côté","Respiration 2-3 cycles"],
     exercises:[
-      {id:"dbbench",   name:"Développé haltères", tempo:[2,0,1,0], rir:[2,1.5], tip:"Amplitude plus profonde qu'à la barre — laisse les haltères descendre sous la poitrine pour l'étirement, sans excès sur l'épaule."},
-      {id:"flyUni",    name:"Écarté unilatéral (poulie haute→basse)", tempo:[2,1,1,1], rir:[1,0.5], tip:"Léger angle du coude fixe tout le mouvement — pense à 'embrasser un arbre', pas à pousser."},
-      {id:"triUniExt", name:"Extension triceps unilatérale (poulie)", tempo:[2,0,1,1], rir:[1,0.5], tip:"Coude fixe collé au corps, isole vraiment le triceps sans aide de l'épaule."},
-      {id:"kickback",  name:"Kickback / extension poulie basse", tempo:[2,0,1,1], rir:[1,0.5], tip:"Buste penché, bras à l'horizontal avant de démarrer — la contraction du triceps est maximale en fin d'amplitude."},
+      {id:"dbbench",   name:"Développé haltères", tempo:[2,0,1,0], rir:[2,1.5], tip:"Amplitude plus profonde qu'à la barre.", sets:3, reps:["10-12","8-10"]},
+      {id:"flyUni",    name:"Écarté unilatéral (poulie haute→basse)", tempo:[2,1,1,1], rir:[1,0.5], tip:"'Embrasser un arbre'.", sets:3, reps:["12-15","10-12"], unilateral:true},
+      {id:"triUniExt", name:"Extension triceps unilatérale (poulie)", tempo:[2,0,1,1], rir:[1,0.5], tip:"Coude fixe collé au corps.", sets:3, reps:["12-15","10-12"], unilateral:true},
+      {id:"triOhDb",   name:"Extension triceps unilatérale haltère", tempo:[3,1,1,0], rir:[1,0.5], tip:"Coude fixe près de la tête.", sets:3, reps:["12-15","10-12"], unilateral:true},
+      {id:"pumpFinisher", name:"Finisher pump", tempo:[1,0,1,1], rir:[0,0], tip:"Charge légère, stress métabolique élevé.", sets:2, reps:["20-25","20-25"]},
     ]},
   vendredi:{ title:"Dos + Épaules", sub:"rappel dos", groups:["dos","epaules"],
-    warmup:["<b>Général</b> — 2 min rameur léger ou vélo","<b>Articulaire</b> — rotations d'épaules 20x, rotation externe légère à l'élastique 2×12 (prépare la coiffe des rotateurs avant l'OHP)","<b>Activation</b> — tirage léger à vide 1×12, OHP à vide 1×10","<b>Potentiation</b> — 1 série à 50% de la charge sur OHP"],
-    stretch:["Épaule croisée devant la poitrine, 20s/côté","Dos en position enfant (child's pose), 30s","Trapèze, inclinaison de tête, 20s/côté","Respiration diaphragmatique, 3-4 cycles"],
+    warmup:["<b>Général</b> — 2 min rameur léger","<b>Articulaire</b> — rotations d'épaules 20x","<b>Activation</b> — tirage léger à vide 1×12","<b>Potentiation</b> — 1 série à 50% sur OHP"],
+    stretch:["Épaule croisée devant la poitrine, 20s/côté","Dos en position enfant, 30s","Trapèze, inclinaison de tête, 20s/côté","Respiration 3-4 cycles"],
     exercises:[
-      {id:"rowUniBanc", name:"Row unilatéral haltère (buste posé, banc incliné)", tempo:[2,0,1,1], rir:[1,0.5], tip:"Version stricte : le buste posé élimine toute triche lombaire, isole vraiment le dos."},
-      {id:"tirageLarge",name:"Tirage horizontal large", tempo:[2,0,1,1], rir:[1,0.5], tip:"Prise plus large déplace l'emphase vers le haut du dos/trapèzes — coudes qui s'écartent plus que sur la version serrée."},
-      {id:"ohp",        name:"OHP", tempo:[2,0,1,0], rir:[2,1], tip:"Trajectoire verticale, barre qui part juste devant le menton — pousse la tête légèrement en avant une fois la barre passée le visage pour rester sous la charge."},
-      {id:"lateralesDb",name:"Latérales haltères", tempo:[2,0,1,0.5], rir:[0.5,0], tip:"Léger angle du coude, le coude mène le mouvement — ne monte pas au-dessus de la ligne des épaules, au-delà ce sont les trapèzes qui prennent le relais."},
-      {id:"facepullUni",name:"Face pull unilatéral", tempo:[2,0,1,1], rir:[1,0.5], tip:"Le coude monte haut vers l'oreille, tire vers le visage en fin de mouvement — cible le deltoïde postérieur et les rotateurs externes, essentiel pour la santé de l'épaule."},
-      {id:"tirageMenton",name:"Tirage menton (Smith)", tempo:[2,0,1,1], rir:[1,0.5], tip:"Prise un peu plus large que les épaules pour limiter le stress sur les tendons de la coiffe, coudes qui montent au-dessus des mains."},
+      {id:"rowUniBanc", name:"Row unilatéral haltère (buste posé)", tempo:[2,0,1,1], rir:[1,0.5], tip:"Buste posé élimine la triche.", sets:3, reps:["10-12","8-10"], unilateral:true},
+      {id:"tirageLarge",name:"Tirage horizontal large", tempo:[2,0,1,1], rir:[1,0.5], tip:"Prise plus large, coudes écartés.", sets:3, reps:["10-12","8-10"]},
+      {id:"ohp",        name:"OHP", tempo:[2,0,1,0], rir:[2,1], tip:"Trajectoire verticale.", sets:4, reps:["8-10","5-8"]},
+      {id:"lateralesDb",name:"Latérales haltères", tempo:[2,0,1,0.5], rir:[0.5,0], tip:"Le coude mène le mouvement.", sets:4, reps:["12-15","10-12"]},
+      {id:"reardeltfly",name:"Écarté arrière câble", tempo:[2,0,1,1], rir:[1,0.5], tip:"Bras quasi tendus.", sets:3, reps:["12-15","10-12"], unilateral:true},
+      {id:"facepullUni",name:"Face pull unilatéral", tempo:[2,0,1,1], rir:[1,0.5], tip:"Coude haut vers l'oreille.", sets:3, reps:["12-15","10-12"], unilateral:true},
+      {id:"tirageMenton",name:"Tirage menton (Smith)", tempo:[2,0,1,1], rir:[1,0.5], tip:"Prise plus large que les épaules.", sets:3, reps:["10-12","8-10"]},
     ]},
   samedi:  { title:"Trapèzes + Mollets + Core", sub:"", groups:["trapezes","mollets","core"],
-    warmup:["<b>Général</b> — 2 min marche ou vélo léger","<b>Articulaire</b> — rotations nuque et épaules douces 15x, mobilité cheville 10x/côté","<b>Activation</b> — dead bug léger 1×10/côté pour préparer le core avant le gainage","<b>Potentiation</b> — pas nécessaire, séance légère en charge"],
-    stretch:["Trapèzes, inclinaison tête, 20s/côté","Mollets contre un mur, 30s/côté","Lombaires en position enfant, 30s","Torsion douce allongée, 20s/côté","Respiration diaphragmatique, 3-4 cycles pour clôturer la semaine"],
+    warmup:["<b>Général</b> — 2 min marche","<b>Articulaire</b> — rotations nuque et épaules","<b>Activation</b> — dead bug 1×10/côté"],
+    stretch:["Trapèzes, inclinaison tête, 20s/côté","Mollets contre un mur, 30s/côté","Lombaires en position enfant, 30s","Torsion douce allongée, 20s/côté","Respiration 3-4 cycles"],
     exercises:[
-      {id:"shrugs",     name:"Shrugs", tempo:[2,0,1,1], rir:[0.5,0], tip:"Monte les épaules droit vers le haut, pas de rotation — la rotation n'ajoute rien et stresse inutilement l'articulation."},
-      {id:"yraise",     name:"Y-raise / rowing face haute", tempo:[2,0,1,1], rir:[1,0.5], tip:"Bras en Y au-dessus de la tête, pouces vers le haut — cible le trapèze moyen-bas, complément essentiel aux shrugs qui ne touchent que le haut."},
-      {id:"molletsAss", name:"Mollets assis", tempo:[2,1,1,1], rir:[0.5,0], tip:"Genou fléchi cible le soléaire (différent du mollet debout jambe tendue) — amplitude complète, pause en haut."},
-      {id:"crunchCable",name:"Crunch câble", tempo:[2,0,1,1], rir:[1,0.5], tip:"La flexion vient de la cage thoracique qui se rapproche du bassin, pas des hanches qui plient — garde les hanches fixes."},
-      {id:"planche",    name:"Planche (isométrique 30-60s)", tempo:null, rir:null, tip:"Corps aligné tête-talons, pas de creux lombaire ni de fesses trop hautes — respire normalement, ne bloque pas ta respiration."},
-      {id:"sideplank",  name:"Side plank (isométrique 20-45s/côté)", tempo:null, rir:null, tip:"Hanche haute, corps en ligne droite de la tête aux pieds — si la hanche s'affaisse, le temps ne compte plus vraiment."},
-      {id:"legraise",   name:"Relevé de jambes", tempo:[2,0,1,1], rir:[1,0.5], tip:"Le bassin reste au sol, pas de bascule lombaire — contrôle la descente des jambes plutôt que de les laisser tomber."},
+      {id:"shrugs",     name:"Shrugs", tempo:[2,0,1,1], rir:[0.5,0], tip:"Monte droit, pas de rotation.", sets:3, reps:["12-15","10-12"]},
+      {id:"yraise",     name:"Y-raise / rowing face haute", tempo:[2,0,1,1], rir:[1,0.5], tip:"Bras en Y, pouces vers le haut.", sets:3, reps:["12-15","10-12"]},
+      {id:"molletsAss", name:"Mollets assis", tempo:[2,1,1,1], rir:[0.5,0], tip:"Genou fléchi cible le soléaire.", sets:4, reps:["15-20","12-15"]},
+      {id:"crunchCable",name:"Crunch câble", tempo:[2,0,1,1], rir:[1,0.5], tip:"Flexion vient de la cage thoracique.", sets:3, reps:["12-15","10-12"]},
+      {id:"pallof",     name:"Pallof press unilatéral", tempo:[2,1,1,1], rir:[1,0.5], tip:"Résiste à la rotation.", sets:3, reps:["10-12","8-10"], unilateral:true},
+      {id:"planche",    name:"Planche (isométrique 30-60s)", tempo:null, rir:null, tip:"Corps aligné tête-talons.", sets:3, reps:null},
+      {id:"sideplank",  name:"Side plank (20-45s/côté)", tempo:null, rir:null, tip:"Hanche haute.", sets:3, reps:null},
+      {id:"legraise",   name:"Relevé de jambes", tempo:[2,0,1,1], rir:[1,0.5], tip:"Bassin au sol.", sets:3, reps:["12-15","10-12"]},
     ]},
 };
 const DAY_ORDER = ["lundi","mardi","mercredi","jeudi","vendredi","samedi"];
@@ -286,9 +349,9 @@ const REST_BY_TYPE = {compound:150, isolation:75};
 const COMPOUND_IDS = new Set(["decline","inclineSm","squat","goodmorning","hipthrust","dbbench","ohp","tirageUniInc","australienne","tirageSerre","rowUniPenche","rowUniBanc","tirageLarge","dips"]);
 
 /* ---------- STATE ---------- */
-const STORAGE_KEY = "frequence_v3";
+const STORAGE_KEY = "frequence_pro_v1";
 let state = loadState();
-function defaultState(){ return { week:1, logs:{}, prs:{} }; }
+function defaultState(){ return { week:1, logs:{}, prs:{}, measurements:[], theme:'dark' }; }
 function loadState(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -307,15 +370,25 @@ function getLog(week, day){
 function phaseOf(week){ return week<=3?1:(week<=5?2:3); }
 const PHASE_LABEL = {1:"Accumulation", 2:"Intensification", 3:"Deload · tests"};
 const WEEK_INTRO = {
-  1:{title:"Semaine 1 — Calibration", text:"Première semaine du bloc Accumulation. L'objectif n'est pas la charge maximale mais l'installation : trouve tes poids de référence sur chaque exercice avec une marge confortable (RIR 2 sur les composés), verrouille la technique et le tempo. Tout ce que tu logges cette semaine sert de base aux 5 suivantes."},
-  2:{title:"Semaine 2 — Première progression", text:"Toujours en Accumulation, même RIR cible qu'en S1. Sur les exercices terminés confortablement, la charge suggérée monte (+2,5kg composés, +1kg isolations). Si un mouvement a été dur en S1, reste sur le même poids et vise juste de meilleures reps plutôt que plus de charge."},
-  3:{title:"Semaine 3 — Fin d'accumulation", text:"Dernière semaine du bloc. Le volume cumulé des 3 semaines commence à peser — une fatigue modérée est normale, pas un signal d'alarme. Continue de progresser la charge où c'est possible, mais priorise la technique sur la performance brute si les deux entrent en conflit."},
-  4:{title:"Semaine 4 — Bascule Intensification", text:"Changement de logique : le RIR cible baisse, tu t'approches plus près de l'échec sur chaque série. La charge continue de monter mais avec une marge de répétitions plus fine. C'est normal que ça devienne plus dur — c'est le but du bloc. Sois strict sur la technique, la fatigue est plus élevée qu'en S1-3."},
-  5:{title:"Semaine 5 — Pic d'intensité", text:"Deuxième et dernière semaine d'Intensification, la plus exigeante du programme. RIR proche de 0 sur beaucoup de mouvements — c'est le moment où les records ont le plus de chances de tomber sur les composés. Écoute ta récupération : si le sommeil ou l'appétit décrochent, coupe une série plutôt que de forcer."},
-  6:{title:"Semaine 6 — Deload & tests", text:"Semaine de clôture en deux temps. Les premiers jours : volume et charge réduits (-30 à -40%) pour dissiper la fatigue des 5 semaines précédentes. En fin de semaine : teste tes nouveaux maximums sur les mouvements clés pour valider la progression avant de repartir sur un nouveau cycle."},
+  1:{title:"Semaine 1 — Calibration", text:"Première semaine du bloc Accumulation. Trouve tes poids de référence avec RIR 2 sur les composés."},
+  2:{title:"Semaine 2 — Première progression", text:"Même RIR cible. Charge suggérée +2,5kg composés, +1kg isolations."},
+  3:{title:"Semaine 3 — Fin d'accumulation", text:"Le volume cumulé commence à peser. Priorise la technique."},
+  4:{title:"Semaine 4 — Bascule Intensification", text:"RIR cible baisse, approche-toi de l'échec."},
+  5:{title:"Semaine 5 — Pic d'intensité", text:"La plus exigeante. Écoute ta récupération."},
+  6:{title:"Semaine 6 — Deload & tests", text:"Volume réduit, teste tes nouveaux maximums en fin de semaine."},
 };
 
 let activeDay = "lundi";
+
+/* ---------- Theme ---------- */
+function applyTheme(){
+  document.body.className = state.theme || 'dark';
+  document.getElementById('themeToggle').textContent = state.theme === 'light' ? '☀️' : '🌓';
+}
+document.getElementById('themeToggle').onclick = ()=>{
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  saveState(); applyTheme();
+};
 
 /* ---------- Program-wide progress ---------- */
 function computeProgramProgress(){
@@ -363,18 +436,48 @@ function renderWeekStepper(){
   const prog = computeProgramProgress();
   document.getElementById("programBarFill").style.width = prog.pct+"%";
   document.getElementById("programBarText").textContent = prog.pct+"% du programme (6 semaines)";
+
+  const wBanner = document.getElementById("weekCompleteBanner");
+  if(weekCompletionPct(state.week)===100 && state.week<TOTAL_WEEKS){
+    wBanner.style.display = "flex";
+    document.getElementById("weekCompleteText").textContent = "Semaine "+state.week+" terminée 💪";
+  } else {
+    wBanner.style.display = "none";
+  }
+  // Streak corrigé
   let streak = 0;
-  outer: for(let w=TOTAL_WEEKS; w>=1; w--){
+  for(let w=TOTAL_WEEKS; w>=1; w--){
     for(let di=DAY_ORDER.length-1; di>=0; di--){
       const d = DAY_ORDER[di];
       if(!PROGRAM[d].exercises.some(e=>e.tempo)) continue;
       if(dayCompletionPct(w,d)===100) streak++;
-      else if(state.logs[logKey(w,d)]) break outer;
+      else break;
     }
+    if(streak > 0 && dayCompletionPct(w, DAY_ORDER[0]) !== 100) break; // arrêt si semaine incomplète
   }
   document.getElementById("programStreak").textContent = streak>0 ? "🔥 "+streak+" séance"+(streak>1?"s":"") : "";
 }
 document.getElementById("weekPrev").onclick = ()=>{ if(state.week>1){ state.week--; saveState(); renderAll(); } };
+document.getElementById("weekCompleteBtn").onclick = ()=>{ if(state.week<TOTAL_WEEKS){ state.week++; saveState(); renderAll(); } };
+
+/* Swipe between days */
+(function(){
+  const zone = document.getElementById("exerciseList");
+  let startX=0, startY=0, tracking=false;
+  zone.addEventListener("touchstart", (e)=>{
+    startX = e.touches[0].clientX; startY = e.touches[0].clientY; tracking = true;
+  }, {passive:true});
+  zone.addEventListener("touchend", (e)=>{
+    if(!tracking) return;
+    tracking = false;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy)*1.5) return;
+    const idx = DAY_ORDER.indexOf(activeDay);
+    if(dx < 0 && idx < DAY_ORDER.length-1){ activeDay = DAY_ORDER[idx+1]; renderExercises(); }
+    else if(dx > 0 && idx > 0){ activeDay = DAY_ORDER[idx-1]; renderExercises(); }
+  }, {passive:true});
+})();
 document.getElementById("weekNext").onclick = ()=>{ if(state.week<TOTAL_WEEKS){ state.week++; saveState(); renderAll(); } };
 
 /* ---------- Day nav ---------- */
@@ -397,12 +500,21 @@ function renderDayNav(){
 }
 
 /* ---------- Progression lookup ---------- */
+function repKg(s){
+  if(s.kgL!==undefined) {
+    const l = parseFloat(s.kgL)||0, r = parseFloat(s.kgR)||0;
+    if(!l && !r) return 0;
+    if(!l) return r; if(!r) return l;
+    return (l+r)/2;
+  }
+  return parseFloat(s.kg)||0;
+}
 function bestSetOf(week, day, exId){
   const log = state.logs[logKey(week, day)];
   if(!log || !log.exercises[exId]) return null;
-  const done = log.exercises[exId].sets.filter(s=>s.done && s.kg);
+  const done = log.exercises[exId].sets.filter(s=>s.done && repKg(s));
   if(!done.length) return null;
-  return done.reduce((a,b)=> (parseFloat(b.kg)||0) > (parseFloat(a.kg)||0) ? b : a);
+  return done.reduce((a,b)=> repKg(b) > repKg(a) ? b : a);
 }
 function previousLoggedWeek(day, exId){
   for(let w=state.week-1; w>=1; w--){
@@ -411,18 +523,24 @@ function previousLoggedWeek(day, exId){
   }
   return null;
 }
-function suggestedSets(day, exId){
+function suggestedSets(day, exId, setCount, isUni){
+  const n = setCount || 3;
   const prev = previousLoggedWeek(day, exId);
-  if(!prev) return [{kg:"",reps:"",done:false},{kg:"",reps:"",done:false},{kg:"",reps:"",done:false}];
+  if(!prev){
+    return Array.from({length:n}, ()=> isUni ? {kgL:"",kgR:"",reps:"",done:false} : {kg:"",reps:"",done:false});
+  }
   const increment = COMPOUND_IDS.has(exId) ? 2.5 : 1;
+  const repsStr = prev.set.reps || "";
+  if(isUni){
+    const prevL = parseFloat(prev.set.kgL!==undefined ? prev.set.kgL : prev.set.kg) || 0;
+    const prevR = parseFloat(prev.set.kgR!==undefined ? prev.set.kgR : prev.set.kg) || 0;
+    const kgLStr = (Math.round((prevL+increment)*2)/2).toString();
+    const kgRStr = (Math.round((prevR+increment)*2)/2).toString();
+    return Array.from({length:n}, ()=>({kgL:kgLStr, kgR:kgRStr, reps:repsStr, done:false, suggested:true}));
+  }
   const suggestedKg = (parseFloat(prev.set.kg) + increment);
   const kgStr = (Math.round(suggestedKg*2)/2).toString();
-  const repsStr = prev.set.reps || "";
-  return [
-    {kg:kgStr, reps:repsStr, done:false, suggested:true},
-    {kg:kgStr, reps:repsStr, done:false, suggested:true},
-    {kg:kgStr, reps:repsStr, done:false, suggested:true},
-  ];
+  return Array.from({length:n}, ()=>({kg:kgStr, reps:repsStr, done:false, suggested:true}));
 }
 
 /* ---------- Warm-up / stretch blocks ---------- */
@@ -446,7 +564,21 @@ function renderFlowCard(kind, items, icon, label){
   return wrap;
 }
 
-/* ---------- Exercises ---------- */
+/* ---------- Double progression / auto-ajustement ---------- */
+function shouldIncreaseLoad(ex, exLog){
+  if(!ex.tempo || !ex.rir) return false;
+  const targetRIR = phaseOf(state.week)===1 ? ex.rir[0] : ex.rir[1];
+  const doneSets = exLog.sets.filter(s=>s.done);
+  if(doneSets.length === 0) return false;
+  // Si toutes les séries sont complétées et qu'au moins une a atteint le RIR cible (approximation : reps dans la fourchette haute)
+  const repRange = ex.reps[phaseOf(state.week)===1?0:1].split("-").map(Number);
+  const highRep = repRange[1] || repRange[0];
+  const allDone = doneSets.length >= ex.sets;
+  const someHighRep = doneSets.some(s=> parseInt(s.reps) >= highRep);
+  return allDone && someHighRep;
+}
+
+/* ---------- Exercises rendering ---------- */
 function tempoStripHTML(tempo){
   const [ecc,pauseB,con,pauseH] = tempo;
   const seg = (cls,v)=> v>0 ? `<div class="tempo-seg ${cls}" style="flex:${v}"></div>` : "";
@@ -458,6 +590,11 @@ function rirLabel(rir){
   const idx = phaseOf(state.week)===1?0:1;
   const val = idx===0?rir[0]:rir[1];
   return "RIR "+(val===0.5?"0-1":val);
+}
+function repsTarget(ex){
+  if(!ex.reps) return null;
+  const idx = phaseOf(state.week)===1?0:1;
+  return ex.reps[idx];
 }
 function estimate1RM(kg,reps){ return kg*(1+reps/30); }
 
@@ -473,10 +610,10 @@ function renderExercises(){
   const list = document.getElementById("exerciseList");
   list.innerHTML = "";
   const log = getLog(state.week, activeDay);
-  let doneCount=0, totalCount=0;
+  let doneCount=0, totalCount=0, sessionVolume=0, prCount=0;
 
   day.exercises.forEach((ex,i)=>{
-    if(!log.exercises[ex.id]) log.exercises[ex.id] = {sets: ex.tempo ? suggestedSets(activeDay, ex.id) : [{kg:"",reps:"",done:false},{kg:"",reps:"",done:false},{kg:"",reps:"",done:false}]};
+    if(!log.exercises[ex.id]) log.exercises[ex.id] = {sets: ex.tempo ? suggestedSets(activeDay, ex.id, ex.sets, ex.unilateral) : Array.from({length: ex.sets||3}, ()=> ex.unilateral ? {kgL:"",kgR:"",reps:"",done:false} : {kg:"",reps:"",done:false})};
     const exLog = log.exercises[ex.id];
     totalCount++;
     if(exLog.sets.some(s=>s.done)) doneCount++;
@@ -485,20 +622,27 @@ function renderExercises(){
     const pr = state.prs[ex.id];
 
     const card = document.createElement("div");
-    card.className = "exercise-card";
+    const doneSetsCount = exLog.sets.filter(s=>s.done).length;
+    const isExDone = ex.tempo && doneSetsCount>0 && doneSetsCount>=(ex.sets||exLog.sets.length);
+    card.className = "exercise-card" + (isExDone ? " ex-done" : "");
     card.innerHTML = `
       <div class="ex-head">
-        <div class="ex-name"><span class="ex-idx">${i+1}</span>${ex.name}</div>
+        <div class="ex-name"><span class="ex-idx">${i+1}</span>${ex.name}${ex.unilateral?' <span class="meta-chip" style="margin-left:4px;">L/R</span>':''}</div>
         ${pr?`<span class="pr-badge">PR ${pr.kg}×${pr.reps}</span>`:""}
       </div>
-      ${prev ? `<div class="progress-line" id="prog-${ex.id}"></div>` : (ex.tempo ? `<div class="progress-line"><span class="progress-text">Première fois cette semaine — pas de comparaison</span></div>` : "")}
+      ${prev ? `<div class="progress-line" id="prog-${ex.id}"></div>` : (ex.tempo ? `<div class="progress-line"><span class="progress-text">Première fois cette semaine</span></div>` : "")}
       <div class="ex-meta">
-        ${ex.tempo ? `<span class="meta-chip rir">${rirLabel(ex.rir)}</span><button class="tempo-toggle" data-ex="${ex.id}">tempo ▾</button>` : `<span class="meta-chip">isométrique</span>`}
+        ${ex.tempo ? `<span class="meta-chip rir">${rirLabel(ex.rir)}</span>` : `<span class="meta-chip">isométrique</span>`}
+        ${ex.sets ? `<span class="meta-chip">${ex.sets}×${repsTarget(ex) || "hold"}</span>` : ``}
+        ${ex.tempo ? `<button class="tempo-toggle" data-ex="${ex.id}">tempo ▾</button>` : ``}
         ${ex.tip ? `<button class="tip-toggle" data-ex="${ex.id}">💡 conseil ▾</button>` : ``}
+        ${shouldIncreaseLoad(ex, exLog) ? '<span class="meta-chip" style="background:rgba(79,216,208,0.15); color:var(--pulse);">↑ charge suggérée</span>' : ''}
       </div>
       ${ex.tempo ? `<div class="tempo-detail" id="tempo-${ex.id}">${tempoStripHTML(ex.tempo)}</div>` : ``}
       ${ex.tip ? `<div class="tip-detail" id="tip-${ex.id}">${ex.tip}</div>` : ``}
+      ${(ex.tempo && !COMPOUND_IDS.has(ex.id) && phaseOf(state.week)===2) ? `<div class="tip-detail show" style="display:block; border-left-color:var(--pulse); margin-top:9px;">💡 Myo-reps sur la dernière série possible.</div>` : ``}
       <div class="sets" data-ex="${ex.id}"></div>
+      ${ex.unilateral ? `<div class="sym-chip" id="sym-${ex.id}"></div>` : ``}
       <div class="set-actions">
         <button class="mini-btn add-set">+ série</button>
         ${ex.tempo && COMPOUND_IDS.has(ex.id) ? `<button class="mini-btn rest-btn" data-rest="compound">Repos 2:30</button>` : ex.tempo ? `<button class="mini-btn rest-btn" data-rest="isolation">Repos 1:15</button>` : ``}
@@ -508,9 +652,9 @@ function renderExercises(){
 
     if(prev){
       const pEl = card.querySelector(`#prog-${ex.id}`);
-      const prevKg = parseFloat(prev.set.kg);
+      const prevKg = repKg(prev.set);
       const curBest = bestSetOf(state.week, activeDay, ex.id);
-      const curKg = curBest ? parseFloat(curBest.kg) : null;
+      const curKg = curBest ? repKg(curBest) : null;
       let arrow="flat", diffTxt="pas encore loggé cette semaine";
       if(curKg!==null){
         if(curKg>prevKg){ arrow="up"; diffTxt = `+${(curKg-prevKg).toFixed(1)}kg vs S${prev.week}`; }
@@ -518,7 +662,8 @@ function renderExercises(){
         else { diffTxt = `= vs S${prev.week}`; }
       }
       const arrowChar = arrow==="up"?"↑":arrow==="down"?"↓":"→";
-      pEl.innerHTML = `<span class="arrow ${arrow}">${arrowChar}</span><span class="progress-text">S${prev.week}: <b>${prev.set.kg}kg×${prev.set.reps}</b> — ${diffTxt}</span>`;
+      const prevLabel = ex.unilateral ? `${repKg(prev.set).toFixed(1)}kg moy.` : `${prev.set.kg}kg`;
+      pEl.innerHTML = `<span class="arrow ${arrow}">${arrowChar}</span><span class="progress-text">S${prev.week}: <b>${prevLabel}×${prev.set.reps}</b> — ${diffTxt}</span>`;
     }
 
     const tempoBtn = card.querySelector(".tempo-toggle");
@@ -535,39 +680,125 @@ function renderExercises(){
     };
 
     const setsWrap = card.querySelector(".sets");
+    const symEl = card.querySelector(`#sym-${ex.id}`);
+    function updateSym(){
+      if(!symEl) return;
+      const doneSets = exLog.sets.filter(s=>s.done && s.kgL && s.kgR);
+      if(!doneSets.length){ symEl.innerHTML=""; return; }
+      const last = doneSets[doneSets.length-1];
+      const l = parseFloat(last.kgL), r = parseFloat(last.kgR);
+      const diff = Math.abs(l-r);
+      const pct = Math.max(l,r) ? Math.round(diff/Math.max(l,r)*100) : 0;
+      const cls = pct<=5 ? "ok" : pct<=15 ? "warn" : "bad";
+      symEl.innerHTML = `<span class="sym-badge ${cls}">Δ G/D ${diff.toFixed(1)}kg (${pct}%)</span>`;
+    }
+    const step = COMPOUND_IDS.has(ex.id) ? 2.5 : 1;
+
     function renderSets(){
       setsWrap.innerHTML = "";
       exLog.sets.forEach((s,si)=>{
         const row = document.createElement("div");
-        row.className = "set-row";
-        row.innerHTML = `
-          <div class="set-num mono">${si+1}</div>
-          <input type="number" inputmode="decimal" placeholder="kg" value="${s.kg}" class="${s.suggested?'is-suggested':''}">
-          <input type="number" inputmode="numeric" placeholder="reps" value="${s.reps}" class="${s.suggested?'is-suggested':''}">
-          <button class="done-toggle ${s.done?'on':''}">${s.done?'✓':''}</button>
-        `;
-        const [_, kgInput, repsInput, doneBtn] = row.children;
-        kgInput.oninput = ()=>{ s.kg = kgInput.value; s.suggested=false; kgInput.classList.remove('is-suggested'); saveState(); };
-        repsInput.oninput = ()=>{ s.reps = repsInput.value; s.suggested=false; repsInput.classList.remove('is-suggested'); saveState(); };
-        doneBtn.onclick = ()=>{
-          s.done = !s.done;
-          if(s.done && s.kg && s.reps) checkPR(ex.id, parseFloat(s.kg), parseFloat(s.reps));
-          log.date = todayISO();
-          saveState();
-          renderExercises();
-          renderWeekStepper();
-        };
+        if(ex.unilateral){
+          row.className = "set-row uni";
+          row.innerHTML = `
+            <div class="set-num mono">${si+1}</div>
+            <input type="number" inputmode="decimal" placeholder="kg G" value="${s.kgL||''}" class="${s.suggested?'is-suggested':''}">
+            <input type="number" inputmode="decimal" placeholder="kg D" value="${s.kgR||''}" class="${s.suggested?'is-suggested':''}">
+            <input type="number" inputmode="numeric" placeholder="${repsTarget(ex) || 'reps'}" value="${s.reps}" class="${s.suggested?'is-suggested':''}">
+            <button class="done-toggle ${s.done?'on':''}">${s.done?'✓':''}</button>
+            <button class="delete-set">✕</button>
+          `;
+          const [_, kgL, kgR, repsInput, doneBtn, delBtn] = row.children;
+          kgL.oninput = ()=>{ s.kgL = kgL.value; s.suggested=false; kgL.classList.remove('is-suggested'); saveState(); };
+          kgR.oninput = ()=>{ s.kgR = kgR.value; s.suggested=false; kgR.classList.remove('is-suggested'); saveState(); };
+          repsInput.oninput = ()=>{ s.reps = repsInput.value; s.suggested=false; repsInput.classList.remove('is-suggested'); saveState(); };
+          doneBtn.onclick = ()=>{
+            s.done = !s.done;
+            if(s.done && s.kgL && s.kgR && s.reps) {
+              const newPr = checkPR(ex.id, repKg(s), parseFloat(s.reps));
+              if(newPr) prCount++;
+            }
+            log.date = todayISO();
+            saveState();
+            renderExercises();
+            renderWeekStepper();
+          };
+          delBtn.onclick = ()=>{
+            if(exLog.sets.length <= 1) return;
+            exLog.sets.splice(si,1);
+            saveState(); renderSets(); renderExercises();
+          };
+        } else {
+          row.className = "set-row";
+          row.innerHTML = `
+            <div class="set-num mono">${si+1}</div>
+            <div class="kg-wrap">
+              <button type="button" class="step-btn step-down">−</button>
+              <input type="number" inputmode="decimal" placeholder="kg" value="${s.kg}" class="${s.suggested?'is-suggested':''}">
+              <button type="button" class="step-btn step-up">+</button>
+            </div>
+            <input type="number" inputmode="numeric" placeholder="${repsTarget(ex) || 'reps'}" value="${s.reps}" class="${s.suggested?'is-suggested':''}">
+            <button class="done-toggle ${s.done?'on':''}">${s.done?'✓':''}</button>
+            <button class="delete-set">✕</button>
+          `;
+          const [_, kgWrap, repsInput, doneBtn, delBtn] = row.children;
+          const stepDown = kgWrap.querySelector(".step-down");
+          const kgInput = kgWrap.querySelector("input");
+          const stepUp = kgWrap.querySelector(".step-up");
+          kgInput.oninput = ()=>{ s.kg = kgInput.value; s.suggested=false; kgInput.classList.remove('is-suggested'); saveState(); };
+          const applyStep = (dir)=>{
+            const cur = parseFloat(kgInput.value) || 0;
+            const next = Math.max(0, Math.round((cur + dir*step)*2)/2);
+            kgInput.value = next;
+            s.kg = String(next); s.suggested=false; kgInput.classList.remove('is-suggested');
+            saveState();
+          };
+          stepDown.onclick = ()=> applyStep(-1);
+          stepUp.onclick = ()=> applyStep(1);
+          repsInput.oninput = ()=>{ s.reps = repsInput.value; s.suggested=false; repsInput.classList.remove('is-suggested'); saveState(); };
+          doneBtn.onclick = ()=>{
+            s.done = !s.done;
+            if(s.done && s.kg && s.reps) {
+              const newPr = checkPR(ex.id, parseFloat(s.kg), parseFloat(s.reps));
+              if(newPr) prCount++;
+            }
+            log.date = todayISO();
+            saveState();
+            renderExercises();
+            renderWeekStepper();
+          };
+          delBtn.onclick = ()=>{
+            if(exLog.sets.length <= 1) return;
+            exLog.sets.splice(si,1);
+            saveState(); renderSets(); renderExercises();
+          };
+        }
         setsWrap.appendChild(row);
+        if(s.done) sessionVolume += (repKg(s) * (parseInt(s.reps)||0));
       });
+      updateSym();
     }
     renderSets();
-    card.querySelector(".add-set").onclick = ()=>{ exLog.sets.push({kg:"",reps:"",done:false}); saveState(); renderSets(); };
+    card.querySelector(".add-set").onclick = ()=>{ exLog.sets.push(ex.unilateral ? {kgL:"",kgR:"",reps:"",done:false} : {kg:"",reps:"",done:false}); saveState(); renderSets(); };
     const restBtn = card.querySelector("[data-rest]");
     if(restBtn) restBtn.onclick = ()=> startTimer(restBtn.dataset.rest, ex.name);
   });
 
   document.getElementById("dayProgress").textContent = doneCount+"/"+totalCount+" exercices";
   document.getElementById("completeBanner").classList.toggle("show", totalCount>0 && doneCount===totalCount);
+
+  // Session summary
+  const summaryEl = document.getElementById("sessionSummary");
+  if(doneCount > 0){
+    summaryEl.classList.add("show");
+    summaryEl.innerHTML = `
+      <strong>Résumé de la séance</strong><br>
+      Volume total : <b>${sessionVolume.toFixed(0)} kg</b> · PR aujourd'hui : <b>${prCount}</b><br>
+      Exercices complétés : ${doneCount}/${totalCount}
+    `;
+  } else {
+    summaryEl.classList.remove("show");
+  }
 }
 
 function checkPR(exId, kg, reps){
@@ -576,10 +807,12 @@ function checkPR(exId, kg, reps){
   if(!existing || est > estimate1RM(existing.kg, existing.reps)){
     state.prs[exId] = {kg, reps, date: todayISO()};
     saveState();
+    return true;
   }
+  return false;
 }
 
-/* ---------- Timer ---------- */
+/* ---------- Timer intelligent ---------- */
 let timerInterval = null;
 function beep(){
   try{
@@ -587,8 +820,7 @@ function beep(){
     [0,0.18,0.36].forEach((delay,i)=>{
       const o = ctx.createOscillator(), g = ctx.createGain();
       o.connect(g); g.connect(ctx.destination);
-      o.type = "sine";
-      o.frequency.value = i<2 ? 880 : 1175;
+      o.type = "sine"; o.frequency.value = i<2 ? 880 : 1175;
       g.gain.value = 0.001;
       const t = ctx.currentTime + delay;
       g.gain.exponentialRampToValueAtTime(0.18, t+0.01);
@@ -598,7 +830,13 @@ function beep(){
   }catch(e){}
 }
 function startTimer(type, label){
-  const seconds = REST_BY_TYPE[type] ?? 90;
+  let seconds = REST_BY_TYPE[type] ?? 90;
+  // Timer intelligent : ajuste selon le RIR (si faible, ajoute 30s)
+  const ex = PROGRAM[activeDay].exercises.find(e=>e.name===label);
+  if(ex && ex.rir){
+    const rirVal = phaseOf(state.week)===1 ? ex.rir[0] : ex.rir[1];
+    if(rirVal <= 1) seconds += 30;
+  }
   let remaining = seconds;
   const overlay = document.getElementById("timerOverlay");
   document.getElementById("timerLabel").textContent = "Repos — " + label;
@@ -620,25 +858,101 @@ document.getElementById("timerClose").onclick = ()=>{
   clearInterval(timerInterval);
 };
 
-/* ---------- Wake lock: keep screen on during the session ---------- */
+/* ---------- Wake lock ---------- */
 let wakeLock = null;
 async function requestWakeLock(){
-  try{
-    if("wakeLock" in navigator){ wakeLock = await navigator.wakeLock.request("screen"); }
-  }catch(e){ /* not supported or denied — fail silently */ }
+  try{ if("wakeLock" in navigator) wakeLock = await navigator.wakeLock.request("screen"); }catch(e){}
 }
 document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") requestWakeLock(); });
 document.addEventListener("click", requestWakeLock, {once:true});
 requestWakeLock();
 
-/* ---------- Settings modal ---------- */
-document.getElementById("gearBtn").onclick = ()=> document.getElementById("modalOverlay").classList.add("show");
+/* ---------- Settings modal + chart ---------- */
+function bodyFatDW(sum4mm, age){
+  let C,M;
+  if(age<20){C=1.1620;M=0.0630;}
+  else if(age<30){C=1.1631;M=0.0632;}
+  else if(age<40){C=1.1422;M=0.0544;}
+  else if(age<50){C=1.1620;M=0.0700;}
+  else {C=1.1715;M=0.0779;}
+  const density = C - M*Math.log10(sum4mm);
+  const bf = (495/density) - 450;
+  return Math.round(bf*10)/10;
+}
+function renderMeasurements(){
+  const wrap = document.getElementById("mHistory");
+  const entries = state.measurements.map((m,idx)=>({m,idx})).slice(-6).reverse();
+  wrap.innerHTML = entries.length ? entries.map(({m,idx})=>{
+    const ratio = (m.waist ? (m.shoulders/m.waist).toFixed(2) : "—");
+    const parts = [];
+    if(m.shoulders||m.waist) parts.push(`épaules ${m.shoulders||"—"}cm / taille ${m.waist||"—"}cm (ratio ${ratio})`);
+    if(m.pecs) parts.push(`pecs ${m.pecs}cm`);
+    if(m.armL||m.armR) parts.push(`bras G${m.armL||"—"}/D${m.armR||"—"}cm`);
+    if(m.thighL||m.thighR) parts.push(`cuisse G${m.thighL||"—"}/D${m.thighR||"—"}cm`);
+    if(m.bodyFat) parts.push(`<b style="color:var(--signal);">${m.bodyFat}% MG</b>`);
+    return `<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; padding:5px 0; border-bottom:1px solid var(--line);">
+      <span>${m.date}<br>${parts.join(" · ")}</span>
+      <button class="m-delete" data-idx="${idx}" style="background:none; border:none; color:var(--danger); font-size:15px; cursor:pointer; padding:2px 6px;">✕</button>
+    </div>`;
+  }).join("") : "Aucune mesure enregistrée.";
+  wrap.querySelectorAll(".m-delete").forEach(btn=>{
+    btn.onclick = ()=>{
+      state.measurements.splice(parseInt(btn.dataset.idx), 1);
+      saveState();
+      renderMeasurements();
+    };
+  });
+  drawChart();
+}
+function drawChart(){
+  const canvas = document.getElementById("measChart");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  const data = state.measurements.slice(-10);
+  if(data.length < 2) return;
+  const vals = data.map(m=>m.shoulders || 0);
+  const max = Math.max(...vals, 100);
+  const min = Math.min(...vals, 50);
+  const range = max - min || 1;
+  ctx.beginPath();
+  ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--signal').trim();
+  ctx.lineWidth = 2;
+  data.forEach((m,i)=>{
+    const x = (i/(data.length-1))*w;
+    const y = h - ((m.shoulders-min)/range)*h;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+}
+document.getElementById("mAdd").onclick = ()=>{
+  const shoulders = parseFloat(document.getElementById("mShoulders").value) || null;
+  const waist = parseFloat(document.getElementById("mWaist").value) || null;
+  const pecs = parseFloat(document.getElementById("mPecs").value) || null;
+  const armL = parseFloat(document.getElementById("mArmL").value) || null;
+  const armR = parseFloat(document.getElementById("mArmR").value) || null;
+  const thighL = parseFloat(document.getElementById("mThighL").value) || null;
+  const thighR = parseFloat(document.getElementById("mThighR").value) || null;
+  const skB = parseFloat(document.getElementById("skBiceps").value);
+  const skT = parseFloat(document.getElementById("skTriceps").value);
+  const skS = parseFloat(document.getElementById("skSubscap").value);
+  const skI = parseFloat(document.getElementById("skSuprailiac").value);
+  const age = parseFloat(document.getElementById("mAge").value);
+  let bodyFat = null;
+  if(skB && skT && skS && skI && age){ bodyFat = bodyFatDW(skB+skT+skS+skI, age); }
+  if(!shoulders && !waist && !pecs && !armL && !armR && !thighL && !thighR && !bodyFat) return;
+  state.measurements.push({date: todayISO(), shoulders, waist, pecs, armL, armR, thighL, thighR, bodyFat, age: age||null});
+  ["mShoulders","mWaist","mPecs","mArmL","mArmR","mThighL","mThighR","skBiceps","skTriceps","skSubscap","skSuprailiac"].forEach(id=> document.getElementById(id).value = "");
+  saveState();
+  renderMeasurements();
+};
+document.getElementById("gearBtn").onclick = ()=>{ renderMeasurements(); document.getElementById("modalOverlay").classList.add("show"); };
 document.getElementById("modalClose").onclick = ()=> document.getElementById("modalOverlay").classList.remove("show");
 document.getElementById("exportBtn").onclick = ()=>{
   const ta = document.getElementById("importArea");
   ta.value = JSON.stringify(state, null, 2);
-  ta.select();
-  try{ document.execCommand("copy"); }catch(e){}
+  navigator.clipboard.writeText(ta.value).catch(()=>{ ta.select(); document.execCommand("copy"); });
 };
 document.getElementById("importBtn").onclick = ()=>{
   try{
@@ -654,12 +968,12 @@ document.getElementById("resetBtn").onclick = ()=>{
 
 /* ---------- init ---------- */
 function renderAll(){
+  applyTheme();
   renderWeekStepper();
   renderDayNav();
   renderExercises();
 }
 renderAll();
-
 })();
 </script>
 </body>
